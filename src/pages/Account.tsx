@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import PageHero from "@/components/PageHero";
+import Footer from "@/components/Footer";
 import { generateReceiptPdf, printReceipt } from "@/lib/receipt";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -515,6 +516,8 @@ const Account = () => {
           </div>
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 };
