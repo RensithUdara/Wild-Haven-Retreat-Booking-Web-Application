@@ -252,10 +252,10 @@ const Booking = () => {
     const nightlyRate = locations.find((l) => l.id === location)?.price ?? 0;
 
     setSubmitting(true);
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    const activeSession = sessionData.session;
+    const { data: userData, error: sessionError } = await supabase.auth.getUser();
+    const activeUser = userData.user;
 
-    if (sessionError || !activeSession?.user) {
+    if (sessionError || !activeUser) {
       setSubmitting(false);
       sessionStorage.setItem(
         DRAFT_KEY,
@@ -277,7 +277,7 @@ const Booking = () => {
     const { data: inserted, error } = await supabase
       .from("bookings")
       .insert({
-        user_id: activeSession.user.id,
+        user_id: activeUser.id,
         location_id: location,
         check_in: format(dateRange.from, "yyyy-MM-dd"),
         check_out: format(dateRange.to, "yyyy-MM-dd"),
@@ -294,6 +294,7 @@ const Booking = () => {
 
 
     if (error) {
+      console.error("Booking insert failed", error);
       if (error.code === "23P01" || /bookings_no_overlap/.test(error.message)) {
         toast.error("Those dates are already booked at this site. Please choose different dates.");
       } else {
