@@ -316,16 +316,33 @@ const Account = () => {
                 </h1>
                 <div className="mt-6 flex flex-wrap items-center gap-4">
                   <p className="text-sm font-light text-background/60">{user.email}</p>
-                  <button
-                    onClick={async () => {
-                      await signOut();
-                      navigate("/");
-                    }}
-                    className="inline-flex h-10 items-center gap-2 rounded-full border border-background/20 bg-background/10 px-5 text-[11px] font-normal uppercase tracking-wider text-background/75 transition-colors hover:bg-background hover:text-foreground"
-                  >
-                    <LogOut className="h-3.5 w-3.5" />
-                    Sign out
-                  </button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button className="inline-flex h-10 items-center gap-2 rounded-full border border-background/20 bg-background/10 px-5 text-[11px] font-normal uppercase tracking-wider text-background/75 transition-colors hover:bg-background hover:text-foreground">
+                        <LogOut className="h-3.5 w-3.5" />
+                        Sign out
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Sign out of Wild Haven?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          You will need to sign in again to view bookings, receipts, and saved guest details.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Stay signed in</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={async () => {
+                            await signOut();
+                            navigate("/");
+                          }}
+                        >
+                          Sign out
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
 
