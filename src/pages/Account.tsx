@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import PageHero from "@/components/PageHero";
 import { generateReceiptPdf, printReceipt } from "@/lib/receipt";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import accountHeroImage from "@/assets/detail-lake-1.jpg";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -299,72 +301,47 @@ const Account = () => {
       <Navigation />
 
       <main>
-        <section className="bg-foreground pb-28 pt-32 text-background md:pt-40">
-          <div className="container mx-auto px-6 lg:px-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55 }}
-              className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end"
-            >
-              <div>
-                <span className="mb-4 block text-[11px] font-normal uppercase tracking-wider text-background/45">
-                  My account
-                </span>
-                <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                  Hello, {firstName}. Your next quiet stay is waiting here.
-                </h1>
-                <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <p className="text-sm font-light text-background/60">{user.email}</p>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button className="inline-flex h-10 items-center gap-2 rounded-full border border-background/20 bg-background/10 px-5 text-[11px] font-normal uppercase tracking-wider text-background/75 transition-colors hover:bg-background hover:text-foreground">
-                        <LogOut className="h-3.5 w-3.5" />
-                        Sign out
-                      </button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Sign out of Wild Haven?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          You will need to sign in again to view bookings, receipts, and saved guest details.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Stay signed in</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={async () => {
-                            await signOut();
-                            navigate("/");
-                          }}
-                        >
-                          Sign out
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </div>
+        <PageHero
+          image={accountHeroImage}
+          eyebrow="My account"
+          title={`Hello, ${firstName}. Your next quiet stay is waiting here.`}
+          description={user.email ?? undefined}
+          stats={[
+            { value: String(upcoming.length), label: "Upcoming" },
+            { value: String(past.length), label: "Past" },
+            { value: `$${totalSpend.toFixed(0)}`, label: "Booked" },
+          ]}
+        >
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="inline-flex h-10 items-center gap-2 rounded-full border border-background/20 bg-background/10 px-5 text-[11px] font-normal uppercase tracking-wider text-background/75 transition-colors hover:bg-background hover:text-foreground">
+                <LogOut className="h-3.5 w-3.5" />
+                Sign out
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Sign out of Wild Haven?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You will need to sign in again to view bookings, receipts, and saved guest details.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Stay signed in</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async () => {
+                    await signOut();
+                    navigate("/");
+                  }}
+                >
+                  Sign out
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </PageHero>
 
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-background/15 bg-background/[0.06] p-5">
-                  <p className="text-3xl font-light">{upcoming.length}</p>
-                  <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-background/45">Upcoming</p>
-                </div>
-                <div className="rounded-lg border border-background/15 bg-background/[0.06] p-5">
-                  <p className="text-3xl font-light">{past.length}</p>
-                  <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-background/45">Past</p>
-                </div>
-                <div className="rounded-lg border border-background/15 bg-background/[0.06] p-5">
-                  <p className="text-3xl font-light">${totalSpend.toFixed(0)}</p>
-                  <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-background/45">Booked</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="-mt-16 pb-24">
+        <section className="py-24">
           <div className="container mx-auto px-6 lg:px-12">
             <Tabs defaultValue="upcoming" className="mx-auto max-w-6xl">
               <div className="mb-8 flex flex-col gap-4 rounded-lg border border-border bg-card p-3 shadow-hover sm:flex-row sm:items-center sm:justify-between">
