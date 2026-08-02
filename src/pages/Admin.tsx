@@ -19,6 +19,7 @@ import {
   Clock,
   Home,
   ClipboardList,
+  CreditCard,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -60,9 +61,15 @@ interface AdminBooking {
   checkOut: Date;
   status: string;
   totalPrice: number | null;
+  notes: string | null;
+  paymentStatus: "paid" | "unpaid";
 }
 
 const parseDate = (value: string) => new Date(`${value}T00:00:00`);
+const PAYMENT_MARKER = "PAYMENT_STATUS=paid";
+
+const getPaymentStatus = (notes: string | null | undefined): "paid" | "unpaid" =>
+  notes?.includes(PAYMENT_MARKER) ? "paid" : "unpaid";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -113,6 +120,8 @@ const Admin = () => {
           checkOut: parseDate(b.check_out),
           status: b.status,
           totalPrice: b.total_price,
+          notes: b.notes,
+          paymentStatus: getPaymentStatus(b.notes),
         }))
       );
     }
@@ -133,6 +142,8 @@ const Admin = () => {
           checkOut: b.checkOut,
           status: b.status,
           totalPrice: null,
+          notes: b.status === "pending" || b.status === "confirmed" ? PAYMENT_MARKER : null,
+          paymentStatus: b.status === "pending" || b.status === "confirmed" ? "paid" : "unpaid",
         }))
       );
       setFetching(false);
@@ -157,7 +168,7 @@ const Admin = () => {
       .filter((b) => {
         if (!query) return true;
         const location = getLocationById(b.locationId);
-        return [b.guestName, b.email, b.phone ?? "", b.id, location?.name ?? b.locationId]
+        return [b.guestName, b.email, b.phone ?? "", b.id, location?.name ?? b.locationId, b.paymentStatus]
           .join(" ")
           .toLowerCase()
           .includes(query);
@@ -186,6 +197,8 @@ const Admin = () => {
       pending: locationBookings.filter((b) => b.status === "pending").length,
       confirmed: locationBookings.filter((b) => b.status === "confirmed").length,
       cancelled: locationBookings.filter((b) => b.status === "cancelled").length,
+      paid: locationBookings.filter((b) => b.paymentStatus === "paid").length,
+      unpaid: locationBookings.filter((b) => b.paymentStatus !== "paid").length,
       upcomingArrivals,
       avgStay: active.length ? Math.round((totalNights / active.length) * 10) / 10 : 0,
       occupancy: Math.min(100, Math.round((activeStays / Math.max(locations.length, 1)) * 100)),
@@ -203,6 +216,16 @@ const Admin = () => {
   }, [locationBookings]);
 
   const updateStatus = async (id: string, status: "confirmed" | "cancelled") => {
+    const booking = bookings.find((b) => b.id === id);
+    if (status === "confirmed" && booking?.paymentStatus !== "paid") {
+      toast({
+        title: "Payment required",
+        description: "This booking must be paid before admin confirmation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const { error } = await supabase.from("bookings").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Update failed", description: error.message, variant: "destructive" });
@@ -213,7 +236,7 @@ const Admin = () => {
   };
 
   const exportBookings = () => {
-    const headers = ["id", "guest", "email", "phone", "location", "checkIn", "checkOut", "guests", "status", "total"];
+    const headers = ["id", "guest", "email", "phone", "location", "checkIn", "checkOut", "guests", "status", "payment", "total"];
     const rows = filteredBookings.map((booking) => {
       const location = getLocationById(booking.locationId);
       return {
@@ -226,6 +249,7 @@ const Admin = () => {
         checkOut: format(booking.checkOut, "yyyy-MM-dd"),
         guests: booking.guests,
         status: booking.status,
+        payment: booking.paymentStatus,
         total: booking.totalPrice ?? "",
       };
     });
@@ -366,13 +390,14 @@ const Admin = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7"
+              className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8"
             >
               {[
                 { label: "Total bookings", value: stats.total, icon: Calendar },
                 { label: "Upcoming", value: stats.upcoming, icon: Users },
                 { label: "Pending", value: stats.pending, icon: ShieldCheck },
                 { label: "Revenue", value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign },
+                { label: "Paid", value: stats.paid, icon: CreditCard },
                 { label: "Confirmed", value: stats.confirmed, icon: CheckCircle2 },
                 { label: "Cancelled", value: stats.cancelled, icon: XCircle },
                 { label: "Avg. stay", value: `${stats.avgStay} nights`, icon: Clock },
@@ -481,6 +506,7 @@ const Admin = () => {
                             <TableHead className="text-[11px] uppercase tracking-wider font-normal">Dates</TableHead>
                             <TableHead className="text-[11px] uppercase tracking-wider font-normal">Guests</TableHead>
                             <TableHead className="text-[11px] uppercase tracking-wider font-normal">Status</TableHead>
+                            <TableHead className="text-[11px] uppercase tracking-wider font-normal">Payment</TableHead>
                             <TableHead className="text-[11px] uppercase tracking-wider font-normal">Contact</TableHead>
                             {!isDemo && (
                               <TableHead className="text-[11px] uppercase tracking-wider font-normal">Actions</TableHead>
@@ -528,6 +554,18 @@ const Admin = () => {
                                   </Badge>
                                 </TableCell>
                                 <TableCell>
+                                  <Badge
+                                    variant="outline"
+                                    className={`text-xs font-light capitalize ${
+                                      booking.paymentStatus === "paid"
+                                        ? "border-green-200 bg-green-100 text-green-800"
+                                        : "border-orange-200 bg-orange-100 text-orange-800"
+                                    }`}
+                                  >
+                                    {booking.paymentStatus}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
                                   <div className="flex flex-col gap-1">
                                     <a
                                       href={`mailto:${booking.email}`}
@@ -554,6 +592,8 @@ const Admin = () => {
                                         <Button
                                           size="sm"
                                           variant="outline"
+                                          disabled={booking.paymentStatus !== "paid"}
+                                          title={booking.paymentStatus !== "paid" ? "Payment required before confirmation" : "Confirm booking"}
                                           className="h-8 rounded-full px-3 text-[11px] font-light"
                                           onClick={() => updateStatus(booking.id, "confirmed")}
                                         >
