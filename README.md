@@ -1,29 +1,29 @@
-# Wild Haven - Off-Grid Retreat Booking
+# 🌲 Wild Haven - Off-Grid Retreat Booking
 
 Wild Haven is a modern retreat booking web application for discovering, reserving, and managing off-grid campsite stays. Guests can browse retreats, check date availability, sign in, pay through a demo payment step, submit booking requests, manage reservations, and download or print receipts. Admin users get a focused operations dashboard for reviewing paid bookings, contacting guests, exporting reservations, and confirming or cancelling stays.
 
-Live site: https://wild-haven-booking.vercel.app
+🌐 Live site: https://wild-haven-booking.vercel.app
 
-Admin route: https://wild-haven-booking.vercel.app/admin
+🛠️ Admin route: https://wild-haven-booking.vercel.app/admin
 
-Demo admin route: https://wild-haven-booking.vercel.app/admin?demo=true
+🧪 Demo admin route: https://wild-haven-booking.vercel.app/admin?demo=true
 
-## Features
+## ✨ Features
 
-- Responsive public website with landing, about, contact, locations, and detail pages
-- Campsite catalog with photos, amenities, reviews, pricing, and guest capacity details
-- Multi-step booking flow: stay details, guest details, review, payment, and receipt
-- Availability calendar powered by Supabase RPC and database overlap protection
-- Supabase email/password authentication
-- Guest account dashboard for bookings, profile details, cancellation, and receipts
-- Demo payment gateway screen before booking submission
-- Auto-formatting payment inputs for card number and expiry date
-- Admin dashboard with search, location filters, status filters, payment status, and CSV export
-- Admin confirmation is blocked until a booking is marked paid
-- PDF receipt download and printer-friendly receipt view
-- Vercel deployment with SPA route rewrites for direct links such as `/admin`
+- 📱 Responsive public website with landing, about, contact, locations, and detail pages
+- 🏕️ Campsite catalog with photos, amenities, reviews, pricing, and guest capacity details
+- 📅 Multi-step booking flow: stay details, guest details, review, payment, and receipt
+- 🔎 Availability calendar powered by Supabase RPC and database overlap protection
+- 🔐 Supabase email/password authentication
+- 👤 Guest account dashboard for bookings, profile details, cancellation, and receipts
+- 💳 Demo payment gateway screen before booking submission
+- ⌨️ Auto-formatting payment inputs for card number and expiry date
+- 🛠️ Admin dashboard with search, location filters, status filters, payment status, and CSV export
+- ✅ Admin confirmation is blocked until a booking is marked paid
+- 🧾 PDF receipt download and printer-friendly receipt view
+- 🚀 Vercel deployment with SPA route rewrites for direct links such as `/admin`
 
-## Important Payment Note
+## 💳 Important Payment Note
 
 The current payment step is a demo gateway UI. It validates and formats test card details, then stores a paid marker in the booking `notes` field so admin users can confirm the request.
 
@@ -31,7 +31,7 @@ It does not charge real cards.
 
 For production payments, add a real provider such as Stripe or PayPal using a secure backend or serverless function. Do not process or store raw card details in the browser or database.
 
-## App Routes
+## 🧭 App Routes
 
 | Route | Purpose |
 | --- | --- |
@@ -45,22 +45,22 @@ For production payments, add a real provider such as Stripe or PayPal using a se
 | `/admin` | Protected admin dashboard |
 | `/admin?demo=true` | Admin preview using mock booking data |
 
-## Tech Stack
+## 🧰 Tech Stack
 
-- Vite
-- React 18
-- TypeScript
-- Tailwind CSS
-- shadcn/ui and Radix UI
-- Framer Motion
-- React Router
-- TanStack Query
-- Supabase Auth, Database, RPC, and Row Level Security
-- jsPDF
-- Lucide React icons
-- ESLint
+- ⚡ Vite
+- ⚛️ React 18
+- 🟦 TypeScript
+- 🎨 Tailwind CSS
+- 🧩 shadcn/ui and Radix UI
+- 🎞️ Framer Motion
+- 🗺️ React Router
+- 🔄 TanStack Query
+- 🛡️ Supabase Auth, Database, RPC, and Row Level Security
+- 📄 jsPDF
+- 🎯 Lucide React icons
+- 🧹 ESLint
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```text
 .
@@ -87,15 +87,15 @@ For production payments, add a real provider such as Stripe or PayPal using a se
 `-- README.md
 ```
 
-## Getting Started
+## 🚀 Getting Started
 
-### 1. Install Dependencies
+### 1. 📦 Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
+### 2. 🔧 Configure Environment Variables
 
 Create a `.env` file in the project root:
 
@@ -107,22 +107,22 @@ VITE_SUPABASE_PUBLISHABLE_KEY="your-supabase-publishable-key"
 
 Only use Supabase publishable keys in the frontend. Do not commit service-role keys or payment provider secrets.
 
-### 3. Set Up Supabase
+### 3. 🛡️ Set Up Supabase
 
 Create a Supabase project, then apply the migrations from `supabase/migrations`.
 
 The migrations create:
 
-- `profiles` table
-- `bookings` table
-- `user_roles` table
-- `app_role` enum
-- `booking_status` enum
-- Row Level Security policies
-- Automatic profile creation trigger
-- Booking date validation trigger
-- No-overlap booking constraint
-- `get_booked_ranges` availability RPC
+- 🧑 `profiles` table
+- 📅 `bookings` table
+- 🛠️ `user_roles` table
+- 🏷️ `app_role` enum
+- 🏷️ `booking_status` enum
+- 🔒 Row Level Security policies
+- 👤 Automatic profile creation trigger
+- ✅ Booking date validation trigger
+- 🚫 No-overlap booking constraint
+- 🔎 `get_booked_ranges` availability RPC
 
 Using the Supabase CLI:
 
@@ -131,7 +131,7 @@ supabase link --project-ref your-project-id
 supabase db push
 ```
 
-### 4. Run Locally
+### 4. 💻 Run Locally
 
 ```bash
 npm run dev
@@ -143,36 +143,36 @@ The Vite config uses port `8080`, so the local app usually runs at:
 http://localhost:8080
 ```
 
-## Booking Flow
+## 📅 Booking Flow
 
 Guests complete the booking form in five steps:
 
-1. Select campsite, guest count, check-in date, and check-out date
-2. Enter guest contact details
-3. Review stay details, price breakdown, cancellation policy, and site rules
-4. Complete the demo payment step
-5. View success state and download or print a receipt
+1. 🏕️ Select campsite, guest count, check-in date, and check-out date
+2. 👤 Enter guest contact details
+3. 🧾 Review stay details, price breakdown, cancellation policy, and site rules
+4. 💳 Complete the demo payment step
+5. ✅ View success state and download or print a receipt
 
 Availability is checked through the Supabase `get_booked_ranges` RPC. Existing non-cancelled bookings are disabled in the calendar, and the database also prevents overlapping active bookings.
 
-## Admin Dashboard
+## 🛠️ Admin Dashboard
 
 The admin page includes:
 
-- Compact operations header
-- Booking search
-- Location tabs
-- Upcoming and past filters
-- Status filters
-- Payment status badges
-- CSV export
-- Revenue and booking stats
-- Guest email and phone links
-- Confirm and cancel actions
+- 🧭 Compact operations header
+- 🔍 Booking search
+- 📍 Location tabs
+- 📆 Upcoming and past filters
+- 🏷️ Status filters
+- 💳 Payment status badges
+- 📤 CSV export
+- 📊 Revenue and booking stats
+- ✉️ Guest email and phone links
+- ✅ Confirm and cancel actions
 
 Admin confirmation requires payment. Bookings without the `PAYMENT_STATUS=paid` marker are shown as unpaid and cannot be confirmed from the admin table.
 
-## Creating an Admin User
+## 👤 Creating an Admin User
 
 After a user signs up, add the admin role in Supabase SQL:
 
@@ -193,19 +193,19 @@ For a preview without database admin permissions:
 /admin?demo=true
 ```
 
-## Receipts
+## 🧾 Receipts
 
 Receipt generation lives in `src/lib/receipt.ts`.
 
 Guests can:
 
-- Download a PDF receipt
-- Open a printer-friendly receipt
-- Re-download or print receipts from the account page
+- 📄 Download a PDF receipt
+- 🖨️ Open a printer-friendly receipt
+- 🔁 Re-download or print receipts from the account page
 
 Receipt data includes booking reference, campsite name, dates, guest count, contact details, status, nightly breakdown, total price, and policy text.
 
-## Scripts
+## 🧪 Scripts
 
 ```bash
 npm run dev
@@ -237,7 +237,7 @@ npm run lint
 
 Runs ESLint across the project.
 
-## Deployment
+## 🚢 Deployment
 
 The app is deployed on Vercel:
 
@@ -257,50 +257,50 @@ VITE_SUPABASE_PUBLISHABLE_KEY
 
 Also configure Supabase Auth redirect URLs for the deployed domain.
 
-## Security Notes
+## 🔒 Security Notes
 
-- Row Level Security is enabled for sensitive Supabase tables
-- Authenticated users can view and update their own profile
-- Authenticated users can create, view, update, and cancel their own bookings
-- Admin users can view and update bookings across users
-- Public availability lookup is handled through `get_booked_ranges`
-- Cancelled bookings do not block future availability
-- Real payment secrets must only be used server-side
+- 🛡️ Row Level Security is enabled for sensitive Supabase tables
+- 👤 Authenticated users can view and update their own profile
+- 📅 Authenticated users can create, view, update, and cancel their own bookings
+- 🛠️ Admin users can view and update bookings across users
+- 🔎 Public availability lookup is handled through `get_booked_ranges`
+- ♻️ Cancelled bookings do not block future availability
+- 🔐 Real payment secrets must only be used server-side
 
-## Troubleshooting
+## 🧯 Troubleshooting
 
-### Supabase Requests Fail
+### 🛡️ Supabase Requests Fail
 
 Check that `.env` contains the correct Supabase URL and publishable key. Restart the dev server after changing environment variables.
 
-### Users Cannot Book After Sign-Up
+### 👤 Users Cannot Book After Sign-Up
 
 Check Supabase email confirmation settings. If confirmation is required, users must verify their email before creating authenticated bookings.
 
-### Admin Page Shows Only Personal Bookings
+### 🛠️ Admin Page Shows Only Personal Bookings
 
 Add the user to `public.user_roles` with the `admin` role.
 
-### Direct Vercel Routes Return 404
+### 🚦 Direct Vercel Routes Return 404
 
 Confirm `vercel.json` exists and contains the SPA rewrite to `/index.html`.
 
-### Overlapping Bookings Are Inserted
+### 📅 Overlapping Bookings Are Inserted
 
 Confirm the `btree_gist` extension and `bookings_no_overlap` constraint migration were applied successfully.
 
-## Future Improvements
+## 🌿 Future Improvements
 
-- Replace demo payment UI with Stripe Checkout or PayPal
-- Add server-side payment verification
-- Send automatic email confirmations
-- Add admin calendar view
-- Add dynamic location management
-- Add guest messaging
-- Add search and filters for amenities, price, and region
-- Store uploaded images in Supabase Storage
-- Add automated tests for booking, auth, and admin flows
+- 💳 Replace demo payment UI with Stripe Checkout or PayPal
+- ✅ Add server-side payment verification
+- ✉️ Send automatic email confirmations
+- 📆 Add admin calendar view
+- 🏕️ Add dynamic location management
+- 💬 Add guest messaging
+- 🔎 Add search and filters for amenities, price, and region
+- 🖼️ Store uploaded images in Supabase Storage
+- 🧪 Add automated tests for booking, auth, and admin flows
 
-## License
+## 📄 License
 
 This project is private by default. Add a license file before publishing or distributing it.
