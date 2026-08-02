@@ -23,6 +23,19 @@ import { useAuth } from "@/hooks/useAuth";
 const DRAFT_KEY = "wh_booking_draft";
 const PAYMENT_MARKER = "PAYMENT_STATUS=paid";
 
+const formatCardNumber = (value: string) =>
+  value
+    .replace(/\D/g, "")
+    .slice(0, 16)
+    .replace(/(.{4})/g, "$1 ")
+    .trim();
+
+const formatExpiry = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+  if (digits.length <= 2) return digits;
+  return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+};
+
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -1041,7 +1054,8 @@ const Booking = () => {
                               inputMode="numeric"
                               placeholder="4242 4242 4242 4242"
                               value={paymentCard}
-                              onChange={(e) => setPaymentCard(e.target.value)}
+                              onChange={(e) => setPaymentCard(formatCardNumber(e.target.value))}
+                              maxLength={19}
                               className="h-12 rounded-md bg-card text-sm font-light"
                             />
                           </div>
@@ -1054,7 +1068,8 @@ const Booking = () => {
                                 id="payment-expiry"
                                 placeholder="MM/YY"
                                 value={paymentExpiry}
-                                onChange={(e) => setPaymentExpiry(e.target.value)}
+                                onChange={(e) => setPaymentExpiry(formatExpiry(e.target.value))}
+                                maxLength={5}
                                 className="h-12 rounded-md bg-card text-sm font-light"
                               />
                             </div>
