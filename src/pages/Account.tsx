@@ -314,7 +314,19 @@ const Account = () => {
                 <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight md:text-6xl">
                   Hello, {firstName}. Your next quiet stay is waiting here.
                 </h1>
-                <p className="mt-5 text-sm font-light text-background/60">{user.email}</p>
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <p className="text-sm font-light text-background/60">{user.email}</p>
+                  <button
+                    onClick={async () => {
+                      await signOut();
+                      navigate("/");
+                    }}
+                    className="inline-flex h-10 items-center gap-2 rounded-full border border-background/20 bg-background/10 px-5 text-[11px] font-normal uppercase tracking-wider text-background/75 transition-colors hover:bg-background hover:text-foreground"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    Sign out
+                  </button>
+                </div>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
@@ -350,22 +362,9 @@ const Account = () => {
                     Details
                   </TabsTrigger>
                 </TabsList>
-                <div className="flex flex-wrap gap-3">
-                  <Button asChild className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground">
-                    <Link to="/#booking">Book another stay</Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="rounded-full text-[11px] font-normal uppercase tracking-wider"
-                    onClick={async () => {
-                      await signOut();
-                      navigate("/");
-                    }}
-                  >
-                    <LogOut className="mr-1.5 h-3.5 w-3.5" />
-                    Sign out
-                  </Button>
-                </div>
+                <Button asChild className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground">
+                  <Link to="/#booking">Book another stay</Link>
+                </Button>
               </div>
 
               {nextBooking && (
