@@ -13,6 +13,8 @@ import {
   Pencil,
   Phone,
   Printer,
+  ShieldCheck,
+  User,
   Users,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
@@ -353,7 +355,7 @@ const Account = () => {
                     Past ({past.length})
                   </TabsTrigger>
                   <TabsTrigger value="details" className="rounded-md px-4 py-2 text-[11px] font-normal uppercase tracking-wider">
-                    Details
+                    Edit profile
                   </TabsTrigger>
                 </TabsList>
                 <Button asChild className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground">
@@ -427,9 +429,9 @@ const Account = () => {
                 <Card className="grid overflow-hidden rounded-lg border border-border bg-card shadow-soft lg:grid-cols-[0.75fr_1.25fr]">
                   <div className="bg-foreground p-8 text-background">
                     <Pencil className="mb-8 h-5 w-5 text-primary" />
-                    <h2 className="text-3xl font-light leading-tight tracking-tight">Guest details</h2>
+                    <h2 className="text-3xl font-light leading-tight tracking-tight">Edit profile</h2>
                     <p className="mt-4 text-sm font-light leading-7 text-background/60">
-                      Keep these details ready so your next booking form is faster to complete.
+                      Update the name and phone number used for future booking requests.
                     </p>
                     <div className="mt-8 space-y-3 text-sm font-light text-background/70">
                       <p className="flex items-center gap-3">
@@ -443,11 +445,35 @@ const Account = () => {
                         </p>
                       )}
                     </div>
+                    <div className="mt-8 rounded-lg border border-background/15 bg-background/[0.06] p-4">
+                      <p className="flex items-start gap-3 text-xs font-light leading-6 text-background/62">
+                        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        Email is used for sign-in and receipts, so it cannot be edited here.
+                      </p>
+                    </div>
                   </div>
 
                   <form onSubmit={handleSaveProfile} className="grid gap-5 p-7 md:grid-cols-2 md:p-8">
                     <div className="md:col-span-2">
-                      <Label htmlFor="acc-name" className="text-[11px] font-normal uppercase tracking-wider">
+                      <Label htmlFor="acc-email" className="flex items-center gap-1.5 text-[11px] font-normal uppercase tracking-wider">
+                        <Mail className="h-3 w-3" />
+                        Email
+                      </Label>
+                      <Input
+                        id="acc-email"
+                        value={user.email ?? ""}
+                        readOnly
+                        disabled
+                        className="mt-2 h-12 bg-muted/50 text-sm font-light text-muted-foreground"
+                      />
+                      <p className="mt-2 text-xs font-light text-muted-foreground">
+                        Email changes are not available from this page.
+                      </p>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="acc-name" className="flex items-center gap-1.5 text-[11px] font-normal uppercase tracking-wider">
+                        <User className="h-3 w-3" />
                         Full name
                       </Label>
                       <Input
@@ -457,35 +483,29 @@ const Account = () => {
                         className="mt-2 h-12 text-sm font-light"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="acc-phone" className="text-[11px] font-normal uppercase tracking-wider">
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="acc-phone" className="flex items-center gap-1.5 text-[11px] font-normal uppercase tracking-wider">
+                        <Phone className="h-3 w-3" />
                         Phone
                       </Label>
                       <Input
                         id="acc-phone"
+                        type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+1 (555) 014-0188"
                         className="mt-2 h-12 text-sm font-light"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="acc-postcode" className="text-[11px] font-normal uppercase tracking-wider">
-                        Postcode
-                      </Label>
-                      <Input
-                        id="acc-postcode"
-                        value={postcode}
-                        onChange={(e) => setPostcode(e.target.value)}
-                        className="mt-2 h-12 text-sm font-light"
-                      />
-                    </div>
+
                     <div className="md:col-span-2">
                       <Button
                         type="submit"
                         disabled={savingProfile}
                         className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground"
                       >
-                        {savingProfile ? "Saving..." : "Save details"}
+                        {savingProfile ? "Saving..." : "Save profile"}
                       </Button>
                     </div>
                   </form>
