@@ -334,7 +334,8 @@ const Booking = () => {
     return loc?.name || value;
   };
 
-  const nightlyPrice = locations.find(l => l.id === location)?.price ?? 0;
+  const selectedLocation = locations.find(l => l.id === location);
+  const nightlyPrice = selectedLocation?.price ?? 0;
   const nightsSelected =
     dateRange?.from && dateRange?.to
       ? Math.max(
@@ -360,22 +361,23 @@ const Booking = () => {
   };
 
   return (
-    <section id="booking" className="py-32 lg:py-40 bg-accent/20" ref={ref}>
+    <section id="booking" className="bg-background py-24 md:py-32 lg:py-36" ref={ref}>
       <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="mx-auto mb-12 max-w-3xl text-center"
         >
-          <span className="text-[11px] uppercase tracking-wider text-muted-foreground mb-4 block">
+          <span className="mb-4 block text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
             Reservations
           </span>
-          <h2 className="text-2xl md:text-3xl font-light mb-4 text-foreground tracking-tight">
-            Book Your Escape
+          <h2 className="text-3xl font-light leading-tight tracking-tight text-foreground md:text-5xl">
+            Choose the dates. We will handle the quiet.
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto font-light">
-            Choose your dates and let nature work its magic
+          <p className="mx-auto mt-5 max-w-xl text-sm font-light leading-7 text-muted-foreground">
+            Build your stay in a few calm steps. Pick a retreat, check availability, add guest details,
+            and save the request to your Wild Haven account.
           </p>
         </motion.div>
 
@@ -383,22 +385,78 @@ const Booking = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
+          className="mx-auto max-w-6xl"
         >
-          <Card className="p-8 lg:p-10 shadow-soft border border-border bg-card overflow-hidden">
-            {/* Step Indicator */}
-            <div className="flex items-center justify-center gap-2 mb-8">
-              {[1, 2, 3, 4].map((s) => (
-                <div
-                  key={s}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    s === step ? "w-8 bg-primary" : s < step ? "w-4 bg-primary/50" : "w-4 bg-border"
-                  }`}
-                />
-              ))}
+          <Card className="grid overflow-hidden rounded-lg border border-border bg-card p-0 shadow-hover lg:grid-cols-[0.82fr_1.18fr]">
+            <div className="relative min-h-[360px] bg-foreground text-background lg:min-h-full">
+              <img
+                src={selectedLocation?.image ?? locations[0]?.image}
+                alt={selectedLocation?.name ?? "Wild Haven retreat"}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+              <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-between p-6 md:p-8">
+                <div className="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-normal uppercase tracking-wider text-white/80 backdrop-blur">
+                  {step === 4 ? "Request saved" : `Step ${step} of 4`}
+                </div>
+
+                <div>
+                  <p className="mb-3 text-[11px] font-normal uppercase tracking-wider text-white/55">
+                    {selectedLocation ? "Selected retreat" : "Start with a retreat"}
+                  </p>
+                  <h3 className="text-3xl font-light tracking-tight">
+                    {selectedLocation?.name ?? "Find your off-grid basecamp"}
+                  </h3>
+                  <p className="mt-3 flex items-center gap-2 text-sm font-light text-white/75">
+                    <MapPin className="h-4 w-4" />
+                    {selectedLocation?.location ?? "Forest, lake, meadow, canyon, river, or summit"}
+                  </p>
+                  <div className="mt-6 grid grid-cols-2 gap-3 border-t border-white/15 pt-5 text-sm font-light">
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-white/45">Dates</span>
+                      <span className="mt-1 block text-white">{formatDateRange() || "Not selected"}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-white/45">Guests</span>
+                      <span className="mt-1 block text-white">{guests || "Not selected"}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-white/45">Nights</span>
+                      <span className="mt-1 block text-white">{nightsSelected || "-"}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-white/45">Estimate</span>
+                      <span className="mt-1 block text-white">${totalPrice || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <AnimatePresence mode="wait" custom={direction}>
+            <div className="overflow-hidden p-6 md:p-8 lg:p-10">
+              <div className="mb-8 grid grid-cols-4 gap-2">
+                {["Stay", "Guest", "Review", "Done"].map((label, index) => {
+                  const s = index + 1;
+                  return (
+                    <div key={label}>
+                      <div
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          s <= step ? "bg-primary" : "bg-border"
+                        }`}
+                      />
+                      <p
+                        className={`mt-2 text-[10px] font-normal uppercase tracking-wider ${
+                          s === step ? "text-foreground" : "text-muted-foreground"
+                        }`}
+                      >
+                        {label}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <AnimatePresence mode="wait" custom={direction}>
               {step === 1 && (
                 <motion.div
                   key="step1"
@@ -409,15 +467,15 @@ const Booking = () => {
                   exit="exit"
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <div>
+                  <div className="grid gap-8 xl:grid-cols-[0.85fr_1.15fr]">
+                    <div className="space-y-5">
+                      <div className="rounded-lg border border-border bg-background p-5">
                         <Label htmlFor="location" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                           <MapPin className="h-3 w-3" />
                           Location
                         </Label>
                         <Select value={location} onValueChange={setLocation}>
-                          <SelectTrigger id="location" className="rounded-md text-sm font-light">
+                          <SelectTrigger id="location" className="h-12 rounded-md bg-card text-sm font-light">
                             <SelectValue placeholder="Select a location" />
                           </SelectTrigger>
                           <SelectContent>
@@ -430,13 +488,13 @@ const Booking = () => {
                         </Select>
                       </div>
 
-                      <div>
+                      <div className="rounded-lg border border-border bg-background p-5">
                         <Label htmlFor="guests" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                           <Users className="h-3 w-3" />
                           Guests
                         </Label>
                         <Select value={guests} onValueChange={setGuests}>
-                          <SelectTrigger id="guests" className="rounded-md text-sm font-light">
+                          <SelectTrigger id="guests" className="h-12 rounded-md bg-card text-sm font-light">
                             <SelectValue placeholder="Select guests" />
                           </SelectTrigger>
                           <SelectContent>
@@ -449,10 +507,26 @@ const Booking = () => {
                         </Select>
                       </div>
 
-                      <div className="pt-4">
+                      <div className="rounded-lg bg-accent/40 p-5">
+                        <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                          Stay estimate
+                        </p>
+                        <div className="mt-4 flex items-end justify-between gap-4">
+                          <div>
+                            <p className="text-3xl font-light text-foreground">${totalPrice || 0}</p>
+                            <p className="mt-1 text-xs font-light text-muted-foreground">
+                              {nightsSelected > 0
+                                ? `${nightsSelected} ${nightsSelected === 1 ? "night" : "nights"} at $${nightlyPrice}/night`
+                                : "Select dates for pricing"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
                         <Button
                           size="default"
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          className="h-12 w-full rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
                           onClick={handleStep1Continue}
                         >
                           Continue
@@ -461,7 +535,7 @@ const Booking = () => {
                       </div>
                     </div>
 
-                    <div>
+                    <div className="rounded-lg border border-border bg-background p-5">
                       <Label className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                         <CalendarDays className="h-3 w-3" />
                         Check-in & Check-out
@@ -471,7 +545,7 @@ const Booking = () => {
                         selected={dateRange}
                         onSelect={handleSelectRange}
                         numberOfMonths={1}
-                        className="rounded-md border-border shadow-soft text-sm pointer-events-auto"
+                        className="mx-auto rounded-md border border-border bg-card shadow-soft text-sm pointer-events-auto"
                         disabled={(date) => date < startOfDay(new Date()) || isUnavailable(date)}
                         modifiers={{ unavailable: (date) => isUnavailable(date) }}
                         modifiersClassNames={{
@@ -504,7 +578,7 @@ const Booking = () => {
                       </div>
 
                       {location && nightsSelected > 0 && (
-                        <div className="mt-4 rounded-md border border-border bg-accent/30 p-4 space-y-2">
+                        <div className="mt-4 rounded-md border border-border bg-card p-4 space-y-2">
                           <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
                             Price estimate
                           </p>
@@ -540,8 +614,17 @@ const Booking = () => {
                   exit="exit"
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <div className="space-y-6 max-w-md mx-auto">
-                    <div>
+                  <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-2">
+                    <div className="md:col-span-2">
+                      <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                        Guest details
+                      </p>
+                      <h3 className="mt-2 text-2xl font-light tracking-tight text-foreground">
+                        Where should we send your confirmation?
+                      </h3>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-background p-5">
                       <Label htmlFor="name" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                         <User className="h-3 w-3" />
                         Full Name
@@ -552,11 +635,11 @@ const Booking = () => {
                         placeholder="John Smith"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="rounded-md text-sm font-light"
+                        className="h-12 rounded-md bg-card text-sm font-light"
                       />
                     </div>
 
-                    <div>
+                    <div className="rounded-lg border border-border bg-background p-5">
                       <Label htmlFor="phone" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                         <Phone className="h-3 w-3" />
                         Phone Number
@@ -567,11 +650,11 @@ const Booking = () => {
                         placeholder="+44 7700 900000"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="rounded-md text-sm font-light"
+                        className="h-12 rounded-md bg-card text-sm font-light"
                       />
                     </div>
 
-                    <div>
+                    <div className="rounded-lg border border-border bg-background p-5">
                       <Label htmlFor="email" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                         <Mail className="h-3 w-3" />
                         Email Address
@@ -582,11 +665,11 @@ const Booking = () => {
                         placeholder="john@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="rounded-md text-sm font-light"
+                        className="h-12 rounded-md bg-card text-sm font-light"
                       />
                     </div>
 
-                    <div>
+                    <div className="rounded-lg border border-border bg-background p-5">
                       <Label htmlFor="postcode" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                         <MapPinned className="h-3 w-3" />
                         Postcode
@@ -597,15 +680,15 @@ const Booking = () => {
                         placeholder="SW1A 1AA"
                         value={postcode}
                         onChange={(e) => setPostcode(e.target.value)}
-                        className="rounded-md text-sm font-light"
+                        className="h-12 rounded-md bg-card text-sm font-light"
                       />
                     </div>
 
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex gap-3 pt-3 md:col-span-2">
                       <Button
                         variant="outline"
                         size="default"
-                        className="flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                        className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
                         onClick={handleStep2Back}
                       >
                         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -613,7 +696,7 @@ const Booking = () => {
                       </Button>
                       <Button
                         size="default"
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                        className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
                         onClick={handleStep2Continue}
                       >
                         Review Booking
@@ -636,7 +719,7 @@ const Booking = () => {
                   exit="exit"
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <div className="max-w-lg mx-auto space-y-8">
+                  <div className="mx-auto max-w-3xl space-y-8">
                     <div className="text-center space-y-1">
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
                         Step 3 — Review
@@ -659,7 +742,7 @@ const Booking = () => {
                       </div>
 
                       {!editStay ? (
-                        <div className="rounded-md border border-border divide-y divide-border">
+                        <div className="rounded-lg border border-border bg-background divide-y divide-border">
                           <div className="flex items-start justify-between gap-4 p-4">
                             <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Campsite</span>
                             <span className="text-sm font-light text-foreground text-right">{getLocationLabel(location)}</span>
@@ -682,7 +765,7 @@ const Booking = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="rounded-md border border-border p-4 space-y-4">
+                        <div className="rounded-lg border border-border bg-background p-5 space-y-4">
                           <div>
                             <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
                               <MapPin className="h-3 w-3" />
@@ -809,7 +892,7 @@ const Booking = () => {
                     </div>
 
                     {/* Nights breakdown */}
-                    <div className="rounded-md border border-border bg-accent/30 p-4 space-y-3">
+                    <div className="rounded-lg border border-border bg-accent/35 p-5 space-y-3">
                       <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
                         Nights ({nightsSelected})
                       </p>
@@ -834,7 +917,7 @@ const Booking = () => {
                     </div>
 
                     {/* Cancellation policy */}
-                    <div className="rounded-md border border-border p-4 space-y-3">
+                    <div className="rounded-lg border border-border bg-background p-5 space-y-3">
                       <p className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
                         <ShieldCheck className="h-3 w-3" />
                         Cancellation policy
@@ -861,7 +944,7 @@ const Booking = () => {
                       <Button
                         variant="outline"
                         size="default"
-                        className="flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                        className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
                         onClick={handleStep3Back}
                       >
                         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -870,7 +953,7 @@ const Booking = () => {
                       <Button
                         size="default"
                         disabled={submitting || !agreed}
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                        className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
                         onClick={handleConfirm}
                       >
                         {submitting ? "Saving..." : user ? "Confirm Booking" : "Sign In & Book"}
@@ -997,7 +1080,8 @@ const Booking = () => {
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
+              </AnimatePresence>
+            </div>
           </Card>
         </motion.div>
       </div>
