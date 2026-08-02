@@ -13,9 +13,9 @@ import {
   Pencil,
   Phone,
   Printer,
-  Tent,
   Users,
 } from "lucide-react";
+import Navigation from "@/components/Navigation";
 import { generateReceiptPdf, printReceipt } from "@/lib/receipt";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -296,27 +296,10 @@ const Account = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b border-background/10 bg-foreground/95 backdrop-blur">
-        <div className="container mx-auto flex items-center justify-between px-6 py-5 lg:px-12">
-          <Link to="/" className="flex items-center gap-2">
-            <Tent className="h-4 w-4 text-primary" />
-            <span className="text-sm font-normal tracking-wide text-background">Wild Haven</span>
-          </Link>
-          <button
-            onClick={async () => {
-              await signOut();
-              navigate("/");
-            }}
-            className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-background/60 transition-colors hover:text-background"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Sign out
-          </button>
-        </div>
-      </header>
+      <Navigation />
 
       <main>
-        <section className="bg-foreground pb-28 pt-16 text-background">
+        <section className="bg-foreground pb-28 pt-32 text-background md:pt-40">
           <div className="container mx-auto px-6 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -367,9 +350,22 @@ const Account = () => {
                     Details
                   </TabsTrigger>
                 </TabsList>
-                <Button asChild className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground">
-                  <Link to="/#booking">Book another stay</Link>
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild className="rounded-full bg-foreground text-[11px] font-normal uppercase tracking-wider text-background hover:bg-primary hover:text-primary-foreground">
+                    <Link to="/#booking">Book another stay</Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="rounded-full text-[11px] font-normal uppercase tracking-wider"
+                    onClick={async () => {
+                      await signOut();
+                      navigate("/");
+                    }}
+                  >
+                    <LogOut className="mr-1.5 h-3.5 w-3.5" />
+                    Sign out
+                  </Button>
+                </div>
               </div>
 
               {nextBooking && (
