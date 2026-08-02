@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { Calendar, Users, DollarSign, MapPin, Mail, Phone, ArrowLeft, LogOut, Eye } from "lucide-react";
+import { Calendar, Users, DollarSign, MapPin, Mail, Phone, LogOut, Eye, ShieldCheck } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/table";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import { mockBookings } from "@/data/bookings";
 import { locations, getLocationById } from "@/data/locations";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import adminHeroImage from "@/assets/detail-forest-2.jpg";
 
 interface AdminBooking {
   id: string;
@@ -180,101 +182,79 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation variant="dark" />
+      <Navigation />
 
-      <main className="pt-24 pb-20">
-        <div className="container mx-auto px-6 lg:px-12">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <div className="flex items-center justify-between mb-6">
+      <main>
+        <PageHero
+          image={adminHeroImage}
+          eyebrow={isDemo ? "Admin demo" : "Admin dashboard"}
+          title="Manage stays, guests, and booking flow from one quiet place."
+          description={
+            isAdmin === false
+              ? "You're viewing your own reservations. Admin access is required to see every guest booking."
+              : "Monitor bookings, filter retreats, confirm requests, and keep guest communication close at hand."
+          }
+          stats={[
+            { value: String(stats.total), label: "Total bookings" },
+            { value: String(stats.upcoming), label: "Upcoming" },
+            { value: `$${stats.revenue.toLocaleString()}`, label: "Est. revenue" },
+          ]}
+        >
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="rounded-full border-background/20 bg-background/10 text-[11px] font-normal uppercase tracking-wider text-background hover:bg-background hover:text-foreground"
+            >
+              Back to home
+            </Button>
+            {isDemo ? (
+              <Badge variant="outline" className="gap-1 rounded-full border-background/20 bg-background/10 px-4 py-2 text-[11px] font-normal uppercase tracking-wider text-background">
+                <Eye className="h-3.5 w-3.5" />
+                Demo mode
+              </Badge>
+            ) : (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                onClick={() => navigate("/")}
-                className="text-[11px] uppercase tracking-wider font-normal"
+                onClick={signOut}
+                className="rounded-full border-background/20 bg-background/10 text-[11px] font-normal uppercase tracking-wider text-background hover:bg-background hover:text-foreground"
               >
-                <ArrowLeft className="mr-2 h-3 w-3" />
-                Back to Home
+                <LogOut className="mr-2 h-3.5 w-3.5" />
+                Sign out
               </Button>
-              {isDemo ? (
-                <Badge variant="outline" className="gap-1 text-xs font-light border-primary/30 text-primary">
-                  <Eye className="h-3 w-3" />
-                  Demo Mode
-                </Badge>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={signOut}
-                  className="text-[11px] uppercase tracking-wider font-normal text-destructive hover:text-destructive"
-                >
-                  <LogOut className="mr-2 h-3 w-3" />
-                  Sign Out
-                </Button>
-              )}
-            </div>
+            )}
+          </div>
+        </PageHero>
 
-            <h1 className="text-3xl md:text-4xl font-light mb-3 tracking-tight">
-              Admin Dashboard
-            </h1>
-            <p className="text-sm text-muted-foreground font-light">
-              {isAdmin === false
-                ? "You're viewing your own reservations. Admin access is required to see every guest booking."
-                : "Manage your property bookings and monitor performance"}
-            </p>
-          </motion.div>
-
-          {/* Stats Cards */}
+        <section className="px-6 py-24 lg:px-12">
+          <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+            className="mb-8 grid gap-4 md:grid-cols-4"
           >
-            <Card className="p-6 border border-border shadow-soft">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Calendar className="h-4 w-4 text-primary" />
-                </div>
-              </div>
-              <p className="text-2xl font-light mb-1">{stats.total}</p>
-              <p className="text-xs text-muted-foreground font-light">Total Bookings</p>
-            </Card>
-
-            <Card className="p-6 border border-border shadow-soft">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <Users className="h-4 w-4 text-green-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-light mb-1">{stats.upcoming}</p>
-              <p className="text-xs text-muted-foreground font-light">Upcoming</p>
-            </Card>
-
-            <Card className="p-6 border border-border shadow-soft">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                  <Calendar className="h-4 w-4 text-yellow-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-light mb-1">{stats.pending}</p>
-              <p className="text-xs text-muted-foreground font-light">Pending</p>
-            </Card>
-
-            <Card className="p-6 border border-border shadow-soft">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <DollarSign className="h-4 w-4 text-primary" />
-                </div>
-              </div>
-              <p className="text-2xl font-light mb-1">${stats.revenue.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground font-light">Est. Revenue</p>
-            </Card>
+            {[
+              { label: "Total bookings", value: stats.total, icon: Calendar },
+              { label: "Upcoming", value: stats.upcoming, icon: Users },
+              { label: "Pending", value: stats.pending, icon: ShieldCheck },
+              { label: "Est. revenue", value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card key={item.label} className="rounded-lg border border-border bg-card p-6 shadow-soft">
+                  <div className="mb-8 flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="text-3xl font-light tracking-tight text-foreground">{item.value}</p>
+                  <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-muted-foreground">
+                    {item.label}
+                  </p>
+                </Card>
+              );
+            })}
           </motion.div>
 
           {/* Location Tabs */}
@@ -283,47 +263,58 @@ const Admin = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="flex flex-wrap items-center gap-2 mb-6">
-              {(["upcoming", "past"] as const).map((tf) => (
-                <button
-                  key={tf}
-                  onClick={() => setTimeframe(tf)}
-                  className={`rounded-full px-4 py-1.5 text-[11px] uppercase tracking-wider border transition-colors ${
-                    timeframe === tf
-                      ? "bg-foreground text-background border-foreground"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tf}
-                </button>
-              ))}
-            </div>
-
             <Tabs defaultValue="all" onValueChange={setSelectedLocation}>
-              <TabsList className="mb-6 flex-wrap h-auto gap-2 bg-transparent p-0">
-                <TabsTrigger
-                  value="all"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1.5 text-xs font-light border border-border"
-                >
-                  All Locations
-                </TabsTrigger>
-                {locations.map((loc) => (
+              <Card className="mb-6 rounded-lg border border-border bg-card p-4 shadow-soft">
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  {(["upcoming", "past"] as const).map((tf) => (
+                    <button
+                      key={tf}
+                      onClick={() => setTimeframe(tf)}
+                      className={`rounded-full border px-4 py-2 text-[11px] font-normal uppercase tracking-wider transition-colors ${
+                        timeframe === tf
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {tf}
+                    </button>
+                  ))}
+                </div>
+                <TabsList className="flex h-auto flex-wrap gap-2 bg-transparent p-0">
                   <TabsTrigger
-                    key={loc.id}
-                    value={loc.id}
-                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1.5 text-xs font-light border border-border"
+                    value="all"
+                    className="rounded-full border border-border px-4 py-2 text-xs font-light data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                   >
-                    {loc.name}
+                    All Locations
                   </TabsTrigger>
-                ))}
-              </TabsList>
+                  {locations.map((loc) => (
+                    <TabsTrigger
+                      key={loc.id}
+                      value={loc.id}
+                      className="rounded-full border border-border px-4 py-2 text-xs font-light data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    >
+                      {loc.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Card>
 
               <TabsContent value={selectedLocation} className="mt-0">
-                <Card className="border border-border shadow-soft overflow-hidden">
+                <Card className="overflow-hidden rounded-lg border border-border bg-card shadow-hover">
+                  <div className="border-b border-border p-6">
+                    <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                      {timeframe} bookings
+                    </p>
+                    <h2 className="mt-2 text-3xl font-light tracking-tight text-foreground">
+                      {selectedLocation === "all"
+                        ? "All retreats"
+                        : getLocationById(selectedLocation)?.name ?? selectedLocation}
+                    </h2>
+                  </div>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="border-border">
+                        <TableRow className="border-border bg-secondary/40">
                           <TableHead className="text-[11px] uppercase tracking-wider font-normal">Guest</TableHead>
                           <TableHead className="text-[11px] uppercase tracking-wider font-normal">Location</TableHead>
                           <TableHead className="text-[11px] uppercase tracking-wider font-normal">Dates</TableHead>
@@ -350,7 +341,7 @@ const Admin = () => {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <MapPin className="h-3 w-3 text-muted-foreground" />
+                                  <MapPin className="h-3 w-3 text-primary" />
                                   <span className="text-sm font-light">{location?.name || booking.locationId}</span>
                                 </div>
                               </TableCell>
@@ -364,7 +355,7 @@ const Admin = () => {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-1">
-                                  <Users className="h-3 w-3 text-muted-foreground" />
+                                  <Users className="h-3 w-3 text-primary" />
                                   <span className="text-sm font-light">{booking.guests}</span>
                                 </div>
                               </TableCell>
@@ -403,7 +394,7 @@ const Admin = () => {
                                       <Button
                                         size="sm"
                                         variant="outline"
-                                        className="rounded-full text-[11px] h-7 px-3 font-light"
+                                        className="h-8 rounded-full px-3 text-[11px] font-light"
                                         onClick={() => updateStatus(booking.id, "confirmed")}
                                       >
                                         Confirm
@@ -413,7 +404,7 @@ const Admin = () => {
                                       <Button
                                         size="sm"
                                         variant="ghost"
-                                        className="rounded-full text-[11px] h-7 px-3 font-light text-destructive hover:text-destructive"
+                                        className="h-8 rounded-full px-3 text-[11px] font-light text-destructive hover:text-destructive"
                                         onClick={() => updateStatus(booking.id, "cancelled")}
                                       >
                                         Cancel
@@ -440,7 +431,8 @@ const Admin = () => {
               </TabsContent>
             </Tabs>
           </motion.div>
-        </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
