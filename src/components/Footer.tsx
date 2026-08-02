@@ -17,7 +17,7 @@ const exploreLinks = [
   { label: "Locations", to: "/locations" },
   { label: "About Wild Haven", to: "/about" },
   { label: "Contact", to: "/contact" },
-  { label: "My Bookings", to: "/account" },
+  { label: "Bookings", to: "/account" },
 ];
 
 const stayLinks = [

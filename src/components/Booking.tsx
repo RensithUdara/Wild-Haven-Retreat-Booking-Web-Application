@@ -47,11 +47,11 @@ const Booking = () => {
   const [editStay, setEditStay] = useState(false);
   const [editContact, setEditContact] = useState(false);
 
-  
+
   // Form step state
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(0);
-  
+
   // Step 1 fields - changed to date range
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -61,7 +61,7 @@ const Booking = () => {
   const [guests, setGuests] = useState("");
   const [bookedRanges, setBookedRanges] = useState<{ from: Date; to: Date }[]>([]);
   const [loadingAvailability, setLoadingAvailability] = useState(false);
-  
+
   // Step 2 fields
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -339,12 +339,12 @@ const Booking = () => {
   const nightsSelected =
     dateRange?.from && dateRange?.to
       ? Math.max(
-          1,
-          Math.ceil(
-            (startOfDay(dateRange.to).getTime() - startOfDay(dateRange.from).getTime()) /
-              (1000 * 60 * 60 * 24)
-          )
+        1,
+        Math.ceil(
+          (startOfDay(dateRange.to).getTime() - startOfDay(dateRange.from).getTime()) /
+          (1000 * 60 * 60 * 24)
         )
+      )
       : 0;
   const totalPrice = nightlyPrice * nightsSelected;
   const nightList =
@@ -440,14 +440,12 @@ const Booking = () => {
                   return (
                     <div key={label}>
                       <div
-                        className={`h-1.5 rounded-full transition-all duration-300 ${
-                          s <= step ? "bg-primary" : "bg-border"
-                        }`}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${s <= step ? "bg-primary" : "bg-border"
+                          }`}
                       />
                       <p
-                        className={`mt-2 text-[10px] font-normal uppercase tracking-wider ${
-                          s === step ? "text-foreground" : "text-muted-foreground"
-                        }`}
+                        className={`mt-2 text-[10px] font-normal uppercase tracking-wider ${s === step ? "text-foreground" : "text-muted-foreground"
+                          }`}
                       >
                         {label}
                       </p>
@@ -457,629 +455,629 @@ const Booking = () => {
               </div>
 
               <AnimatePresence mode="wait" custom={direction}>
-              {step === 1 && (
-                <motion.div
-                  key="step1"
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <div className="grid gap-8 xl:grid-cols-[0.85fr_1.15fr]">
-                    <div className="space-y-5">
-                      <div className="rounded-lg border border-border bg-background p-5">
-                        <Label htmlFor="location" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                          <MapPin className="h-3 w-3" />
-                          Location
-                        </Label>
-                        <Select value={location} onValueChange={setLocation}>
-                          <SelectTrigger id="location" className="h-12 rounded-md bg-card text-sm font-light">
-                            <SelectValue placeholder="Select a location" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {locations.map((loc) => (
-                              <SelectItem key={loc.id} value={loc.id}>
-                                {loc.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                {step === 1 && (
+                  <motion.div
+                    key="step1"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="grid gap-8 xl:grid-cols-[0.85fr_1.15fr]">
+                      <div className="space-y-5">
+                        <div className="rounded-lg border border-border bg-background p-5">
+                          <Label htmlFor="location" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                            <MapPin className="h-3 w-3" />
+                            Location
+                          </Label>
+                          <Select value={location} onValueChange={setLocation}>
+                            <SelectTrigger id="location" className="h-12 rounded-md bg-card text-sm font-light">
+                              <SelectValue placeholder="Select a location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {locations.map((loc) => (
+                                <SelectItem key={loc.id} value={loc.id}>
+                                  {loc.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
 
-                      <div className="rounded-lg border border-border bg-background p-5">
-                        <Label htmlFor="guests" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                          <Users className="h-3 w-3" />
-                          Guests
-                        </Label>
-                        <Select value={guests} onValueChange={setGuests}>
-                          <SelectTrigger id="guests" className="h-12 rounded-md bg-card text-sm font-light">
-                            <SelectValue placeholder="Select guests" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 Guest</SelectItem>
-                            <SelectItem value="2">2 Guests</SelectItem>
-                            <SelectItem value="3">3 Guests</SelectItem>
-                            <SelectItem value="4">4 Guests</SelectItem>
-                            <SelectItem value="5">5+ Guests</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                        <div className="rounded-lg border border-border bg-background p-5">
+                          <Label htmlFor="guests" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                            <Users className="h-3 w-3" />
+                            Guests
+                          </Label>
+                          <Select value={guests} onValueChange={setGuests}>
+                            <SelectTrigger id="guests" className="h-12 rounded-md bg-card text-sm font-light">
+                              <SelectValue placeholder="Select guests" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1 Guest</SelectItem>
+                              <SelectItem value="2">2 Guests</SelectItem>
+                              <SelectItem value="3">3 Guests</SelectItem>
+                              <SelectItem value="4">4 Guests</SelectItem>
+                              <SelectItem value="5">5+ Guests</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
 
-                      <div className="rounded-lg bg-accent/40 p-5">
-                        <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
-                          Stay estimate
-                        </p>
-                        <div className="mt-4 flex items-end justify-between gap-4">
-                          <div>
-                            <p className="text-3xl font-light text-foreground">${totalPrice || 0}</p>
-                            <p className="mt-1 text-xs font-light text-muted-foreground">
-                              {nightsSelected > 0
-                                ? `${nightsSelected} ${nightsSelected === 1 ? "night" : "nights"} at $${nightlyPrice}/night`
-                                : "Select dates for pricing"}
-                            </p>
+                        <div className="rounded-lg bg-accent/40 p-5">
+                          <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                            Stay estimate
+                          </p>
+                          <div className="mt-4 flex items-end justify-between gap-4">
+                            <div>
+                              <p className="text-3xl font-light text-foreground">${totalPrice || 0}</p>
+                              <p className="mt-1 text-xs font-light text-muted-foreground">
+                                {nightsSelected > 0
+                                  ? `${nightsSelected} ${nightsSelected === 1 ? "night" : "nights"} at $${nightlyPrice}/night`
+                                  : "Select dates for pricing"}
+                              </p>
+                            </div>
                           </div>
+                        </div>
+
+                        <div>
+                          <Button
+                            size="default"
+                            className="h-12 w-full rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
+                            onClick={handleStep1Continue}
+                          >
+                            Continue
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
 
-                      <div>
+                      <div className="rounded-lg border border-border bg-background p-5">
+                        <Label className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                          <CalendarDays className="h-3 w-3" />
+                          Check-in & Check-out
+                        </Label>
+                        <Calendar
+                          mode="range"
+                          selected={dateRange}
+                          onSelect={handleSelectRange}
+                          numberOfMonths={1}
+                          className="mx-auto rounded-md border border-border bg-card shadow-soft text-sm pointer-events-auto"
+                          disabled={(date) => date < startOfDay(new Date()) || isUnavailable(date)}
+                          modifiers={{ unavailable: (date) => isUnavailable(date) }}
+                          modifiersClassNames={{
+                            unavailable:
+                              "line-through text-muted-foreground/60 bg-muted/60 rounded-none",
+                          }}
+                        />
+                        <div className="mt-3 space-y-1 text-center">
+                          {!location && (
+                            <p className="text-xs text-muted-foreground font-light">
+                              Select a location to see availability
+                            </p>
+                          )}
+                          {location && loadingAvailability && (
+                            <p className="text-xs text-muted-foreground font-light">
+                              Checking availability…
+                            </p>
+                          )}
+                          {location && !loadingAvailability && (
+                            <p className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                              <span className="inline-block h-3 w-3 rounded-sm bg-muted border border-border" />
+                              {bookedRanges.length > 0 ? "Booked / unavailable" : "All dates available"}
+                            </p>
+                          )}
+                          {dateRange?.from && dateRange?.to && (
+                            <p className="text-xs text-muted-foreground font-light">
+                              {nightsSelected} {nightsSelected === 1 ? "night" : "nights"} selected
+                            </p>
+                          )}
+                        </div>
+
+                        {location && nightsSelected > 0 && (
+                          <div className="mt-4 rounded-md border border-border bg-card p-4 space-y-2">
+                            <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                              Price estimate
+                            </p>
+                            <div className="flex items-baseline justify-between text-sm font-light text-foreground">
+                              <span className="text-muted-foreground">
+                                ${nightlyPrice} × {nightsSelected} {nightsSelected === 1 ? "night" : "nights"}
+                              </span>
+                              <span>${totalPrice}</span>
+                            </div>
+                            <div className="flex items-baseline justify-between border-t border-border pt-2 text-foreground">
+                              <span className="text-[11px] uppercase tracking-wider font-normal">Total</span>
+                              <span className="text-lg font-light">${totalPrice}</span>
+                            </div>
+                            <p className="text-[11px] text-muted-foreground font-light">
+                              Estimate only — taxes and fees confirmed by email.
+                            </p>
+                          </div>
+                        )}
+
+
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-2">
+                      <div className="md:col-span-2">
+                        <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                          Guest details
+                        </p>
+                        <h3 className="mt-2 text-2xl font-light tracking-tight text-foreground">
+                          Where should we send your confirmation?
+                        </h3>
+                      </div>
+
+                      <div className="rounded-lg border border-border bg-background p-5">
+                        <Label htmlFor="name" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                          <User className="h-3 w-3" />
+                          Full Name
+                        </Label>
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="John Smith"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="h-12 rounded-md bg-card text-sm font-light"
+                        />
+                      </div>
+
+                      <div className="rounded-lg border border-border bg-background p-5">
+                        <Label htmlFor="phone" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                          <Phone className="h-3 w-3" />
+                          Phone Number
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+44 7700 900000"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="h-12 rounded-md bg-card text-sm font-light"
+                        />
+                      </div>
+
+                      <div className="rounded-lg border border-border bg-background p-5">
+                        <Label htmlFor="email" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                          <Mail className="h-3 w-3" />
+                          Email Address
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="john@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="h-12 rounded-md bg-card text-sm font-light"
+                        />
+                      </div>
+
+                      <div className="rounded-lg border border-border bg-background p-5">
+                        <Label htmlFor="postcode" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                          <MapPinned className="h-3 w-3" />
+                          Postcode
+                        </Label>
+                        <Input
+                          id="postcode"
+                          type="text"
+                          placeholder="SW1A 1AA"
+                          value={postcode}
+                          onChange={(e) => setPostcode(e.target.value)}
+                          className="h-12 rounded-md bg-card text-sm font-light"
+                        />
+                      </div>
+
+                      <div className="flex gap-3 pt-3 md:col-span-2">
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={handleStep2Back}
+                        >
+                          <ArrowLeft className="mr-2 h-4 w-4" />
+                          Back
+                        </Button>
                         <Button
                           size="default"
-                          className="h-12 w-full rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
-                          onClick={handleStep1Continue}
+                          className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
+                          onClick={handleStep2Continue}
                         >
-                          Continue
+                          Review Booking
                           <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+
+
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div
+                    key="step3"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="mx-auto max-w-3xl space-y-8">
+                      <div className="text-center space-y-1">
+                        <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Step 3 — Review
+                        </span>
+                        <h3 className="text-xl font-light text-foreground">Check your stay</h3>
+                      </div>
+
+                      {/* Stay details */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">Your stay</p>
+                          <button
+                            type="button"
+                            onClick={() => setEditStay((v) => !v)}
+                            className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-primary hover:opacity-70 transition-opacity"
+                          >
+                            <Pencil className="h-3 w-3" />
+                            {editStay ? "Done" : "Edit"}
+                          </button>
+                        </div>
+
+                        {!editStay ? (
+                          <div className="rounded-lg border border-border bg-background divide-y divide-border">
+                            <div className="flex items-start justify-between gap-4 p-4">
+                              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Campsite</span>
+                              <span className="text-sm font-light text-foreground text-right">{getLocationLabel(location)}</span>
+                            </div>
+                            <div className="flex items-start justify-between gap-4 p-4">
+                              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Check-in</span>
+                              <span className="text-sm font-light text-foreground text-right">
+                                {dateRange?.from ? format(dateRange.from, "EEE d MMM yyyy") : "—"}
+                              </span>
+                            </div>
+                            <div className="flex items-start justify-between gap-4 p-4">
+                              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Check-out</span>
+                              <span className="text-sm font-light text-foreground text-right">
+                                {dateRange?.to ? format(dateRange.to, "EEE d MMM yyyy") : "—"}
+                              </span>
+                            </div>
+                            <div className="flex items-start justify-between gap-4 p-4">
+                              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Guests</span>
+                              <span className="text-sm font-light text-foreground text-right">{guests}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="rounded-lg border border-border bg-background p-5 space-y-4">
+                            <div>
+                              <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <MapPin className="h-3 w-3" />
+                                Campsite
+                              </Label>
+                              <Select value={location} onValueChange={setLocation}>
+                                <SelectTrigger className="rounded-md text-sm font-light">
+                                  <SelectValue placeholder="Choose a campsite" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {locations.map((loc) => (
+                                    <SelectItem key={loc.id} value={loc.id}>
+                                      {loc.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <Users className="h-3 w-3" />
+                                Guests
+                              </Label>
+                              <Select value={guests} onValueChange={setGuests}>
+                                <SelectTrigger className="rounded-md text-sm font-light">
+                                  <SelectValue placeholder="Number of guests" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="1">1 Guest</SelectItem>
+                                  <SelectItem value="2">2 Guests</SelectItem>
+                                  <SelectItem value="3">3 Guests</SelectItem>
+                                  <SelectItem value="4">4 Guests</SelectItem>
+                                  <SelectItem value="5">5+ Guests</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <CalendarDays className="h-3 w-3" />
+                                Check-in & Check-out
+                              </Label>
+                              <Calendar
+                                mode="range"
+                                selected={dateRange}
+                                onSelect={handleSelectRange}
+                                numberOfMonths={1}
+                                className="rounded-md border border-border shadow-soft text-sm pointer-events-auto"
+                                disabled={(date) => date < startOfDay(new Date()) || isUnavailable(date)}
+                                modifiers={{ unavailable: (date) => isUnavailable(date) }}
+                                modifiersClassNames={{
+                                  unavailable: "line-through text-muted-foreground/60 bg-muted/60 rounded-none",
+                                }}
+                              />
+                              {location && loadingAvailability && (
+                                <p className="mt-2 text-xs text-muted-foreground font-light text-center">
+                                  Checking availability…
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Contact details */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">Contact details</p>
+                          <button
+                            type="button"
+                            onClick={() => setEditContact((v) => !v)}
+                            className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-primary hover:opacity-70 transition-opacity"
+                          >
+                            <Pencil className="h-3 w-3" />
+                            {editContact ? "Done" : "Edit"}
+                          </button>
+                        </div>
+
+                        {!editContact ? (
+                          <div className="rounded-md border border-border divide-y divide-border">
+                            <div className="flex items-start justify-between gap-4 p-4">
+                              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Lead guest</span>
+                              <span className="text-sm font-light text-foreground text-right">
+                                {name || "—"}
+                                <span className="block text-xs text-muted-foreground">{email}</span>
+                                <span className="block text-xs text-muted-foreground">{phone}</span>
+                                {postcode && <span className="block text-xs text-muted-foreground">{postcode}</span>}
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="rounded-md border border-border p-4 space-y-4">
+                            <div>
+                              <Label htmlFor="review-name" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <User className="h-3 w-3" />
+                                Full Name
+                              </Label>
+                              <Input id="review-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="rounded-md text-sm font-light" />
+                            </div>
+                            <div>
+                              <Label htmlFor="review-phone" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <Phone className="h-3 w-3" />
+                                Phone Number
+                              </Label>
+                              <Input id="review-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="rounded-md text-sm font-light" />
+                            </div>
+                            <div>
+                              <Label htmlFor="review-email" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <Mail className="h-3 w-3" />
+                                Email Address
+                              </Label>
+                              <Input id="review-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-md text-sm font-light" />
+                            </div>
+                            <div>
+                              <Label htmlFor="review-postcode" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
+                                <MapPinned className="h-3 w-3" />
+                                Postcode
+                              </Label>
+                              <Input id="review-postcode" type="text" value={postcode} onChange={(e) => setPostcode(e.target.value)} className="rounded-md text-sm font-light" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Nights breakdown */}
+                      <div className="rounded-lg border border-border bg-accent/35 p-5 space-y-3">
+                        <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                          Nights ({nightsSelected})
+                        </p>
+                        <ul className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                          {nightList.map((night) => (
+                            <li
+                              key={night.toISOString()}
+                              className="flex items-baseline justify-between text-sm font-light text-foreground"
+                            >
+                              <span className="text-muted-foreground">{format(night, "EEE d MMM")}</span>
+                              <span>${nightlyPrice}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex items-baseline justify-between border-t border-border pt-3 text-foreground">
+                          <span className="text-[11px] uppercase tracking-wider font-normal">Total</span>
+                          <span className="text-lg font-light">${totalPrice}</span>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground font-light">
+                          ${nightlyPrice} per night × {nightsSelected} {nightsSelected === 1 ? "night" : "nights"}. Taxes and fees confirmed by email.
+                        </p>
+                      </div>
+
+                      {/* Cancellation policy */}
+                      <div className="rounded-lg border border-border bg-background p-5 space-y-3">
+                        <p className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                          <ShieldCheck className="h-3 w-3" />
+                          Cancellation policy
+                        </p>
+                        <ul className="space-y-2 text-xs text-muted-foreground font-light">
+                          <li className="flex gap-2"><span className="text-primary">•</span> Free cancellation up to 14 days before check-in — full refund.</li>
+                          <li className="flex gap-2"><span className="text-primary">•</span> Cancel 7–14 days before arrival and 50% of the total is refunded.</li>
+                          <li className="flex gap-2"><span className="text-primary">•</span> Within 7 days of arrival the stay is non-refundable, but dates can be moved once.</li>
+                          <li className="flex gap-2"><span className="text-primary">•</span> Check-in from 3pm, check-out by 11am. Quiet hours 10pm–7am.</li>
+                        </ul>
+                        <label className="flex items-start gap-3 pt-1 cursor-pointer">
+                          <Checkbox
+                            checked={agreed}
+                            onCheckedChange={(v) => setAgreed(v === true)}
+                            className="mt-0.5"
+                          />
+                          <span className="text-xs text-muted-foreground font-light">
+                            I've read and accept the cancellation policy and site rules.
+                          </span>
+                        </label>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={handleStep3Back}
+                        >
+                          <ArrowLeft className="mr-2 h-4 w-4" />
+                          Back
+                        </Button>
+                        <Button
+                          size="default"
+                          disabled={submitting || !agreed}
+                          className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
+                          onClick={handleConfirm}
+                        >
+                          {submitting ? "Saving..." : user ? "Confirm Booking" : "Sign In & Book"}
                         </Button>
                       </div>
                     </div>
+                  </motion.div>
+                )}
 
-                    <div className="rounded-lg border border-border bg-background p-5">
-                      <Label className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                        <CalendarDays className="h-3 w-3" />
-                        Check-in & Check-out
-                      </Label>
-                      <Calendar
-                        mode="range"
-                        selected={dateRange}
-                        onSelect={handleSelectRange}
-                        numberOfMonths={1}
-                        className="mx-auto rounded-md border border-border bg-card shadow-soft text-sm pointer-events-auto"
-                        disabled={(date) => date < startOfDay(new Date()) || isUnavailable(date)}
-                        modifiers={{ unavailable: (date) => isUnavailable(date) }}
-                        modifiersClassNames={{
-                          unavailable:
-                            "line-through text-muted-foreground/60 bg-muted/60 rounded-none",
-                        }}
-                      />
-                      <div className="mt-3 space-y-1 text-center">
-                        {!location && (
-                          <p className="text-xs text-muted-foreground font-light">
-                            Select a location to see availability
-                          </p>
-                        )}
-                        {location && loadingAvailability && (
-                          <p className="text-xs text-muted-foreground font-light">
-                            Checking availability…
-                          </p>
-                        )}
-                        {location && !loadingAvailability && (
-                          <p className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
-                            <span className="inline-block h-3 w-3 rounded-sm bg-muted border border-border" />
-                            {bookedRanges.length > 0 ? "Booked / unavailable" : "All dates available"}
-                          </p>
-                        )}
-                        {dateRange?.from && dateRange?.to && (
-                          <p className="text-xs text-muted-foreground font-light">
-                            {nightsSelected} {nightsSelected === 1 ? "night" : "nights"} selected
-                          </p>
-                        )}
+                {step === 4 && (
+                  <motion.div
+                    key="step4"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="text-center py-8 space-y-6">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                      >
+                        <CheckCircle className="h-16 w-16 text-primary mx-auto" />
+                      </motion.div>
+
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-light text-foreground">Booking Confirmed</h3>
+                        <p className="text-sm text-muted-foreground font-light">
+                          Thank you, {name}! Your reservation has been submitted.
+                        </p>
                       </div>
 
-                      {location && nightsSelected > 0 && (
-                        <div className="mt-4 rounded-md border border-border bg-card p-4 space-y-2">
-                          <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
-                            Price estimate
-                          </p>
-                          <div className="flex items-baseline justify-between text-sm font-light text-foreground">
-                            <span className="text-muted-foreground">
-                              ${nightlyPrice} × {nightsSelected} {nightsSelected === 1 ? "night" : "nights"}
-                            </span>
-                            <span>${totalPrice}</span>
-                          </div>
-                          <div className="flex items-baseline justify-between border-t border-border pt-2 text-foreground">
-                            <span className="text-[11px] uppercase tracking-wider font-normal">Total</span>
-                            <span className="text-lg font-light">${totalPrice}</span>
-                          </div>
-                          <p className="text-[11px] text-muted-foreground font-light">
-                            Estimate only — taxes and fees confirmed by email.
-                          </p>
+                      <div className="bg-accent/30 rounded-md p-4 max-w-sm mx-auto text-left space-y-2">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider">Booking Summary</p>
+                        <div className="text-sm font-light text-foreground space-y-1">
+                          <p><span className="text-muted-foreground">Location:</span> {getLocationLabel(location)}</p>
+                          <p><span className="text-muted-foreground">Dates:</span> {formatDateRange()}</p>
+                          <p><span className="text-muted-foreground">Guests:</span> {guests}</p>
+                          <p><span className="text-muted-foreground">Total:</span> ${totalPrice}</p>
+                          <p><span className="text-muted-foreground">Email:</span> {email}</p>
                         </div>
-                      )}
-
-
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 2 && (
-                <motion.div
-                  key="step2"
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-2">
-                    <div className="md:col-span-2">
-                      <p className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
-                        Guest details
-                      </p>
-                      <h3 className="mt-2 text-2xl font-light tracking-tight text-foreground">
-                        Where should we send your confirmation?
-                      </h3>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-background p-5">
-                      <Label htmlFor="name" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                        <User className="h-3 w-3" />
-                        Full Name
-                      </Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="John Smith"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="h-12 rounded-md bg-card text-sm font-light"
-                      />
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-background p-5">
-                      <Label htmlFor="phone" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                        <Phone className="h-3 w-3" />
-                        Phone Number
-                      </Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+44 7700 900000"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="h-12 rounded-md bg-card text-sm font-light"
-                      />
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-background p-5">
-                      <Label htmlFor="email" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                        <Mail className="h-3 w-3" />
-                        Email Address
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="h-12 rounded-md bg-card text-sm font-light"
-                      />
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-background p-5">
-                      <Label htmlFor="postcode" className="flex items-center gap-1.5 mb-3 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                        <MapPinned className="h-3 w-3" />
-                        Postcode
-                      </Label>
-                      <Input
-                        id="postcode"
-                        type="text"
-                        placeholder="SW1A 1AA"
-                        value={postcode}
-                        onChange={(e) => setPostcode(e.target.value)}
-                        className="h-12 rounded-md bg-card text-sm font-light"
-                      />
-                    </div>
-
-                    <div className="flex gap-3 pt-3 md:col-span-2">
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={handleStep2Back}
-                      >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back
-                      </Button>
-                      <Button
-                        size="default"
-                        className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
-                        onClick={handleStep2Continue}
-                      >
-                        Review Booking
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-
-
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div
-                  key="step3"
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <div className="mx-auto max-w-3xl space-y-8">
-                    <div className="text-center space-y-1">
-                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                        Step 3 — Review
-                      </span>
-                      <h3 className="text-xl font-light text-foreground">Check your stay</h3>
-                    </div>
-
-                    {/* Stay details */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">Your stay</p>
-                        <button
-                          type="button"
-                          onClick={() => setEditStay((v) => !v)}
-                          className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-primary hover:opacity-70 transition-opacity"
-                        >
-                          <Pencil className="h-3 w-3" />
-                          {editStay ? "Done" : "Edit"}
-                        </button>
                       </div>
 
-                      {!editStay ? (
-                        <div className="rounded-lg border border-border bg-background divide-y divide-border">
-                          <div className="flex items-start justify-between gap-4 p-4">
-                            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Campsite</span>
-                            <span className="text-sm font-light text-foreground text-right">{getLocationLabel(location)}</span>
-                          </div>
-                          <div className="flex items-start justify-between gap-4 p-4">
-                            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Check-in</span>
-                            <span className="text-sm font-light text-foreground text-right">
-                              {dateRange?.from ? format(dateRange.from, "EEE d MMM yyyy") : "—"}
-                            </span>
-                          </div>
-                          <div className="flex items-start justify-between gap-4 p-4">
-                            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Check-out</span>
-                            <span className="text-sm font-light text-foreground text-right">
-                              {dateRange?.to ? format(dateRange.to, "EEE d MMM yyyy") : "—"}
-                            </span>
-                          </div>
-                          <div className="flex items-start justify-between gap-4 p-4">
-                            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Guests</span>
-                            <span className="text-sm font-light text-foreground text-right">{guests}</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="rounded-lg border border-border bg-background p-5 space-y-4">
-                          <div>
-                            <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <MapPin className="h-3 w-3" />
-                              Campsite
-                            </Label>
-                            <Select value={location} onValueChange={setLocation}>
-                              <SelectTrigger className="rounded-md text-sm font-light">
-                                <SelectValue placeholder="Choose a campsite" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {locations.map((loc) => (
-                                  <SelectItem key={loc.id} value={loc.id}>
-                                    {loc.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <Users className="h-3 w-3" />
-                              Guests
-                            </Label>
-                            <Select value={guests} onValueChange={setGuests}>
-                              <SelectTrigger className="rounded-md text-sm font-light">
-                                <SelectValue placeholder="Number of guests" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="1">1 Guest</SelectItem>
-                                <SelectItem value="2">2 Guests</SelectItem>
-                                <SelectItem value="3">3 Guests</SelectItem>
-                                <SelectItem value="4">4 Guests</SelectItem>
-                                <SelectItem value="5">5+ Guests</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <CalendarDays className="h-3 w-3" />
-                              Check-in & Check-out
-                            </Label>
-                            <Calendar
-                              mode="range"
-                              selected={dateRange}
-                              onSelect={handleSelectRange}
-                              numberOfMonths={1}
-                              className="rounded-md border border-border shadow-soft text-sm pointer-events-auto"
-                              disabled={(date) => date < startOfDay(new Date()) || isUnavailable(date)}
-                              modifiers={{ unavailable: (date) => isUnavailable(date) }}
-                              modifiersClassNames={{
-                                unavailable: "line-through text-muted-foreground/60 bg-muted/60 rounded-none",
-                              }}
-                            />
-                            {location && loadingAvailability && (
-                              <p className="mt-2 text-xs text-muted-foreground font-light text-center">
-                                Checking availability…
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Contact details */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">Contact details</p>
-                        <button
-                          type="button"
-                          onClick={() => setEditContact((v) => !v)}
-                          className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-primary hover:opacity-70 transition-opacity"
-                        >
-                          <Pencil className="h-3 w-3" />
-                          {editContact ? "Done" : "Edit"}
-                        </button>
-                      </div>
-
-                      {!editContact ? (
-                        <div className="rounded-md border border-border divide-y divide-border">
-                          <div className="flex items-start justify-between gap-4 p-4">
-                            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Lead guest</span>
-                            <span className="text-sm font-light text-foreground text-right">
-                              {name || "—"}
-                              <span className="block text-xs text-muted-foreground">{email}</span>
-                              <span className="block text-xs text-muted-foreground">{phone}</span>
-                              {postcode && <span className="block text-xs text-muted-foreground">{postcode}</span>}
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="rounded-md border border-border p-4 space-y-4">
-                          <div>
-                            <Label htmlFor="review-name" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <User className="h-3 w-3" />
-                              Full Name
-                            </Label>
-                            <Input id="review-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="rounded-md text-sm font-light" />
-                          </div>
-                          <div>
-                            <Label htmlFor="review-phone" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <Phone className="h-3 w-3" />
-                              Phone Number
-                            </Label>
-                            <Input id="review-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="rounded-md text-sm font-light" />
-                          </div>
-                          <div>
-                            <Label htmlFor="review-email" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <Mail className="h-3 w-3" />
-                              Email Address
-                            </Label>
-                            <Input id="review-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-md text-sm font-light" />
-                          </div>
-                          <div>
-                            <Label htmlFor="review-postcode" className="flex items-center gap-1.5 mb-2 text-card-foreground text-[11px] uppercase tracking-wider font-normal">
-                              <MapPinned className="h-3 w-3" />
-                              Postcode
-                            </Label>
-                            <Input id="review-postcode" type="text" value={postcode} onChange={(e) => setPostcode(e.target.value)} className="rounded-md text-sm font-light" />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Nights breakdown */}
-                    <div className="rounded-lg border border-border bg-accent/35 p-5 space-y-3">
-                      <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
-                        Nights ({nightsSelected})
+                      <p className="text-xs text-muted-foreground font-light">
+                        Your request is saved to your account — we'll confirm by email to {email}
                       </p>
-                      <ul className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
-                        {nightList.map((night) => (
-                          <li
-                            key={night.toISOString()}
-                            className="flex items-baseline justify-between text-sm font-light text-foreground"
-                          >
-                            <span className="text-muted-foreground">{format(night, "EEE d MMM")}</span>
-                            <span>${nightlyPrice}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="flex items-baseline justify-between border-t border-border pt-3 text-foreground">
-                        <span className="text-[11px] uppercase tracking-wider font-normal">Total</span>
-                        <span className="text-lg font-light">${totalPrice}</span>
-                      </div>
-                      <p className="text-[11px] text-muted-foreground font-light">
-                        ${nightlyPrice} per night × {nightsSelected} {nightsSelected === 1 ? "night" : "nights"}. Taxes and fees confirmed by email.
-                      </p>
-                    </div>
 
-                    {/* Cancellation policy */}
-                    <div className="rounded-lg border border-border bg-background p-5 space-y-3">
-                      <p className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
-                        <ShieldCheck className="h-3 w-3" />
-                        Cancellation policy
-                      </p>
-                      <ul className="space-y-2 text-xs text-muted-foreground font-light">
-                        <li className="flex gap-2"><span className="text-primary">•</span> Free cancellation up to 14 days before check-in — full refund.</li>
-                        <li className="flex gap-2"><span className="text-primary">•</span> Cancel 7–14 days before arrival and 50% of the total is refunded.</li>
-                        <li className="flex gap-2"><span className="text-primary">•</span> Within 7 days of arrival the stay is non-refundable, but dates can be moved once.</li>
-                        <li className="flex gap-2"><span className="text-primary">•</span> Check-in from 3pm, check-out by 11am. Quiet hours 10pm–7am.</li>
-                      </ul>
-                      <label className="flex items-start gap-3 pt-1 cursor-pointer">
-                        <Checkbox
-                          checked={agreed}
-                          onCheckedChange={(v) => setAgreed(v === true)}
-                          className="mt-0.5"
-                        />
-                        <span className="text-xs text-muted-foreground font-light">
-                          I've read and accept the cancellation policy and site rules.
-                        </span>
-                      </label>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={handleStep3Back}
-                      >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back
-                      </Button>
-                      <Button
-                        size="default"
-                        disabled={submitting || !agreed}
-                        className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
-                        onClick={handleConfirm}
-                      >
-                        {submitting ? "Saving..." : user ? "Confirm Booking" : "Sign In & Book"}
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 4 && (
-                <motion.div
-                  key="step4"
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <div className="text-center py-8 space-y-6">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                    >
-                      <CheckCircle className="h-16 w-16 text-primary mx-auto" />
-                    </motion.div>
-                    
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-light text-foreground">Booking Confirmed</h3>
-                      <p className="text-sm text-muted-foreground font-light">
-                        Thank you, {name}! Your reservation has been submitted.
-                      </p>
-                    </div>
-
-                    <div className="bg-accent/30 rounded-md p-4 max-w-sm mx-auto text-left space-y-2">
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">Booking Summary</p>
-                      <div className="text-sm font-light text-foreground space-y-1">
-                        <p><span className="text-muted-foreground">Location:</span> {getLocationLabel(location)}</p>
-                        <p><span className="text-muted-foreground">Dates:</span> {formatDateRange()}</p>
-                        <p><span className="text-muted-foreground">Guests:</span> {guests}</p>
-                        <p><span className="text-muted-foreground">Total:</span> ${totalPrice}</p>
-                        <p><span className="text-muted-foreground">Email:</span> {email}</p>
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-muted-foreground font-light">
-                      Your request is saved to your account — we'll confirm by email to {email}
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-                      <Button
-                        size="default"
-                        className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={() =>
-                          dateRange?.from &&
-                          dateRange?.to &&
-                          generateReceiptPdf({
-                            reference: (confirmed?.id ?? "").slice(0, 8).toUpperCase() || "PENDING",
-                            locationId: location,
-                            checkIn: format(dateRange.from, "yyyy-MM-dd"),
-                            checkOut: format(dateRange.to, "yyyy-MM-dd"),
-                            guests: parseInt(guests, 10) || 1,
-                            guestName: name,
-                            email,
-                            phone,
-                            totalPrice: totalPrice,
-                            status: "pending",
-                            issuedAt: confirmed?.created_at,
-                          })
-                        }
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download Receipt
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={() => {
-                          if (!dateRange?.from || !dateRange?.to) return;
-                          const opened = printReceipt({
-                            reference: (confirmed?.id ?? "").slice(0, 8).toUpperCase() || "PENDING",
-                            locationId: location,
-                            checkIn: format(dateRange.from, "yyyy-MM-dd"),
-                            checkOut: format(dateRange.to, "yyyy-MM-dd"),
-                            guests: parseInt(guests, 10) || 1,
-                            guestName: name,
-                            email,
-                            phone,
-                            totalPrice: totalPrice,
-                            status: "pending",
-                            issuedAt: confirmed?.created_at,
-                          });
-                          if (!opened) {
-                            toast.error("Pop-up blocked", {
-                              description: "Allow pop-ups to open the printer-friendly receipt.",
-                            });
+                      <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                        <Button
+                          size="default"
+                          className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={() =>
+                            dateRange?.from &&
+                            dateRange?.to &&
+                            generateReceiptPdf({
+                              reference: (confirmed?.id ?? "").slice(0, 8).toUpperCase() || "PENDING",
+                              locationId: location,
+                              checkIn: format(dateRange.from, "yyyy-MM-dd"),
+                              checkOut: format(dateRange.to, "yyyy-MM-dd"),
+                              guests: parseInt(guests, 10) || 1,
+                              guestName: name,
+                              email,
+                              phone,
+                              totalPrice: totalPrice,
+                              status: "pending",
+                              issuedAt: confirmed?.created_at,
+                            })
                           }
-                        }}
-                      >
-                        <Printer className="mr-2 h-4 w-4" />
-                        Print Receipt
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={() => navigate("/account")}
-                      >
-                        View My Bookings
-                      </Button>
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Receipt
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={() => {
+                            if (!dateRange?.from || !dateRange?.to) return;
+                            const opened = printReceipt({
+                              reference: (confirmed?.id ?? "").slice(0, 8).toUpperCase() || "PENDING",
+                              locationId: location,
+                              checkIn: format(dateRange.from, "yyyy-MM-dd"),
+                              checkOut: format(dateRange.to, "yyyy-MM-dd"),
+                              guests: parseInt(guests, 10) || 1,
+                              guestName: name,
+                              email,
+                              phone,
+                              totalPrice: totalPrice,
+                              status: "pending",
+                              issuedAt: confirmed?.created_at,
+                            });
+                            if (!opened) {
+                              toast.error("Pop-up blocked", {
+                                description: "Allow pop-ups to open the printer-friendly receipt.",
+                              });
+                            }
+                          }}
+                        >
+                          <Printer className="mr-2 h-4 w-4" />
+                          Print Receipt
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={() => navigate("/account")}
+                        >
+                          View Bookings
+                        </Button>
 
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
-                        onClick={handleReset}
-                      >
-                        Book Another Stay
-                      </Button>
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={handleReset}
+                        >
+                          Book Another Stay
+                        </Button>
+                      </div>
+
                     </div>
-
-                  </div>
-                </motion.div>
-              )}
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
           </Card>
