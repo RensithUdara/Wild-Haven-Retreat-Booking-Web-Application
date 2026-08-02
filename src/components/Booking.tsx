@@ -7,19 +7,21 @@ import { DateRange } from "react-day-picker";
 import { format, addDays, startOfDay } from "date-fns";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { Badge } from "./ui/badge";
 import { Calendar } from "./ui/calendar";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { toast } from "sonner";
 import { Checkbox } from "./ui/checkbox";
-import { CalendarDays, Users, MapPin, ArrowRight, ArrowLeft, CheckCircle, User, Phone, Mail, MapPinned, ShieldCheck, Download, Printer, Pencil } from "lucide-react";
+import { CalendarDays, Users, MapPin, ArrowRight, ArrowLeft, CheckCircle, User, Phone, Mail, MapPinned, ShieldCheck, Download, Printer, Pencil, CreditCard, LockKeyhole, ReceiptText } from "lucide-react";
 import { locations } from "@/data/locations";
 import { generateReceiptPdf, printReceipt } from "@/lib/receipt";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 const DRAFT_KEY = "wh_booking_draft";
+const PAYMENT_MARKER = "PAYMENT_STATUS=paid";
 
 
 const slideVariants = {
@@ -68,6 +70,10 @@ const Booking = () => {
   const [email, setEmail] = useState("");
   const [postcode, setPostcode] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [paymentName, setPaymentName] = useState("");
+  const [paymentCard, setPaymentCard] = useState("");
+  const [paymentExpiry, setPaymentExpiry] = useState("");
+  const [paymentCvc, setPaymentCvc] = useState("");
 
 
   // Prefill contact details for signed-in guests
@@ -201,6 +207,21 @@ const Booking = () => {
     setStep(2);
   };
 
+  const handleStep3Continue = () => {
+    if (!agreed) {
+      toast.error("Please accept the cancellation policy to continue");
+      return;
+    }
+    setPaymentName((prev) => prev || name);
+    setDirection(1);
+    setStep(4);
+  };
+
+  const handlePaymentBack = () => {
+    setDirection(-1);
+    setStep(3);
+  };
+
   const handleConfirm = async () => {
     if (!dateRange?.from || !dateRange?.to) {
       toast.error("Please select your check-in and check-out dates");
@@ -224,6 +245,12 @@ const Booking = () => {
 
     if (!agreed) {
       toast.error("Please accept the cancellation policy to continue");
+      return;
+    }
+
+    const cleanCard = paymentCard.replace(/\s/g, "");
+    if (!paymentName.trim() || cleanCard.length < 12 || !paymentExpiry.trim() || paymentCvc.trim().length < 3) {
+      toast.error("Please complete the payment details before booking");
       return;
     }
 
@@ -287,6 +314,7 @@ const Booking = () => {
         phone: phone.trim(),
         postcode: postcode.trim(),
         total_price: nights * nightlyRate,
+        notes: `${PAYMENT_MARKER}; PAYMENT_REFERENCE=WH-PAY-${Date.now()}; PAYMENT_METHOD=card`,
       })
       .select("id, created_at")
       .single();
@@ -305,9 +333,9 @@ const Booking = () => {
 
 
     setConfirmed(inserted ? { id: inserted.id, created_at: inserted.created_at } : null);
-    toast.success("Booking requested");
+    toast.success("Payment received and booking requested");
     setDirection(1);
-    setStep(4);
+    setStep(5);
   };
 
 
@@ -323,6 +351,10 @@ const Booking = () => {
     setEmail("");
     setPostcode("");
     setAgreed(false);
+    setPaymentName("");
+    setPaymentCard("");
+    setPaymentExpiry("");
+    setPaymentCvc("");
     setConfirmed(null);
     setEditStay(false);
     setEditContact(false);
@@ -397,7 +429,7 @@ const Booking = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
               <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-between p-6 md:p-8">
                 <div className="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-normal uppercase tracking-wider text-white/80 backdrop-blur">
-                  {step === 4 ? "Request saved" : `Step ${step} of 4`}
+                  {step === 5 ? "Request saved" : `Step ${step} of 5`}
                 </div>
 
                 <div>
@@ -434,8 +466,8 @@ const Booking = () => {
             </div>
 
             <div className="overflow-hidden p-6 md:p-8 lg:p-10">
-              <div className="mb-8 grid grid-cols-4 gap-2">
-                {["Stay", "Guest", "Review", "Done"].map((label, index) => {
+              <div className="mb-8 grid grid-cols-5 gap-2">
+                {["Stay", "Guest", "Review", "Pay", "Done"].map((label, index) => {
                   const s = index + 1;
                   return (
                     <div key={label}>
@@ -952,9 +984,10 @@ const Booking = () => {
                           size="default"
                           disabled={submitting || !agreed}
                           className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
-                          onClick={handleConfirm}
+                          onClick={handleStep3Continue}
                         >
-                          {submitting ? "Saving..." : user ? "Confirm Booking" : "Sign In & Book"}
+                          Continue to Payment
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -964,6 +997,138 @@ const Booking = () => {
                 {step === 4 && (
                   <motion.div
                     key="step4"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="mx-auto max-w-3xl space-y-6">
+                      <div className="text-center space-y-1">
+                        <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Step 4 - Payment
+                        </span>
+                        <h3 className="text-xl font-light text-foreground">Pay before admin confirmation</h3>
+                        <p className="mx-auto max-w-xl text-sm font-light text-muted-foreground">
+                          Your booking request is sent to admin only after payment is completed.
+                        </p>
+                      </div>
+
+                      <div className="grid gap-5 md:grid-cols-[1fr_0.8fr]">
+                        <div className="rounded-lg border border-border bg-background p-5 space-y-4">
+                          <p className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                            <CreditCard className="h-3.5 w-3.5" />
+                            Secure card payment
+                          </p>
+                          <div>
+                            <Label htmlFor="payment-name" className="mb-2 block text-[11px] uppercase tracking-wider font-normal">
+                              Name on card
+                            </Label>
+                            <Input
+                              id="payment-name"
+                              value={paymentName}
+                              onChange={(e) => setPaymentName(e.target.value)}
+                              className="h-12 rounded-md bg-card text-sm font-light"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="payment-card" className="mb-2 block text-[11px] uppercase tracking-wider font-normal">
+                              Card number
+                            </Label>
+                            <Input
+                              id="payment-card"
+                              inputMode="numeric"
+                              placeholder="4242 4242 4242 4242"
+                              value={paymentCard}
+                              onChange={(e) => setPaymentCard(e.target.value)}
+                              className="h-12 rounded-md bg-card text-sm font-light"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label htmlFor="payment-expiry" className="mb-2 block text-[11px] uppercase tracking-wider font-normal">
+                                Expiry
+                              </Label>
+                              <Input
+                                id="payment-expiry"
+                                placeholder="MM/YY"
+                                value={paymentExpiry}
+                                onChange={(e) => setPaymentExpiry(e.target.value)}
+                                className="h-12 rounded-md bg-card text-sm font-light"
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="payment-cvc" className="mb-2 block text-[11px] uppercase tracking-wider font-normal">
+                                CVC
+                              </Label>
+                              <Input
+                                id="payment-cvc"
+                                inputMode="numeric"
+                                placeholder="123"
+                                value={paymentCvc}
+                                onChange={(e) => setPaymentCvc(e.target.value)}
+                                className="h-12 rounded-md bg-card text-sm font-light"
+                              />
+                            </div>
+                          </div>
+                          <p className="flex items-center gap-2 text-xs font-light text-muted-foreground">
+                            <LockKeyhole className="h-3.5 w-3.5" />
+                            Demo gateway: use test details only. Add live Stripe or PayPal keys before taking real payments.
+                          </p>
+                        </div>
+
+                        <div className="rounded-lg border border-border bg-accent/35 p-5 space-y-4">
+                          <p className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-normal">
+                            <ReceiptText className="h-3.5 w-3.5" />
+                            Payment summary
+                          </p>
+                          <div className="space-y-3 text-sm font-light">
+                            <div className="flex justify-between gap-4">
+                              <span className="text-muted-foreground">{getLocationLabel(location)}</span>
+                              <span>${nightlyPrice}/night</span>
+                            </div>
+                            <div className="flex justify-between gap-4">
+                              <span className="text-muted-foreground">{nightsSelected} nights</span>
+                              <span>${totalPrice}</span>
+                            </div>
+                            <div className="flex justify-between gap-4 border-t border-border pt-3 text-foreground">
+                              <span className="text-[11px] uppercase tracking-wider font-normal">Total due</span>
+                              <span className="text-xl font-light">${totalPrice}</span>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="rounded-full border-green-200 bg-green-100 px-3 py-1 text-[10px] uppercase tracking-wider text-green-800">
+                            Payment required before confirmation
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Button
+                          variant="outline"
+                          size="default"
+                          className="h-12 flex-1 rounded-md smooth-hover text-[11px] uppercase tracking-wider font-normal"
+                          onClick={handlePaymentBack}
+                        >
+                          <ArrowLeft className="mr-2 h-4 w-4" />
+                          Back
+                        </Button>
+                        <Button
+                          size="default"
+                          disabled={submitting}
+                          className="h-12 flex-1 rounded-md bg-foreground text-[11px] font-normal uppercase tracking-wider text-background smooth-hover hover:bg-primary hover:text-primary-foreground"
+                          onClick={handleConfirm}
+                        >
+                          {submitting ? "Processing..." : user ? `Pay $${totalPrice} & Book` : "Sign In & Pay"}
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 5 && (
+                  <motion.div
+                    key="step5"
                     custom={direction}
                     variants={slideVariants}
                     initial="enter"
@@ -981,9 +1146,9 @@ const Booking = () => {
                       </motion.div>
 
                       <div className="space-y-2">
-                        <h3 className="text-xl font-light text-foreground">Booking Confirmed</h3>
+                        <h3 className="text-xl font-light text-foreground">Payment received</h3>
                         <p className="text-sm text-muted-foreground font-light">
-                          Thank you, {name}! Your reservation has been submitted.
+                          Thank you, {name}! Your paid booking request has been sent to admin.
                         </p>
                       </div>
 
@@ -994,6 +1159,7 @@ const Booking = () => {
                           <p><span className="text-muted-foreground">Dates:</span> {formatDateRange()}</p>
                           <p><span className="text-muted-foreground">Guests:</span> {guests}</p>
                           <p><span className="text-muted-foreground">Total:</span> ${totalPrice}</p>
+                          <p><span className="text-muted-foreground">Payment:</span> Paid</p>
                           <p><span className="text-muted-foreground">Email:</span> {email}</p>
                         </div>
                       </div>
