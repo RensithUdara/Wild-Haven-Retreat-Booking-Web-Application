@@ -1,8 +1,9 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Compass, Heart, Leaf, Mountain, TreePine, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import bannerImage from "@/assets/detail-lake-2.jpg";
 import forestImage from "@/assets/detail-forest-1.jpg";
 import meadowImage from "@/assets/detail-meadow-2.jpg";
@@ -66,74 +67,20 @@ const timeline = [
 ];
 
 const About = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 120]);
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
       <Navigation />
 
-      <section className="relative min-h-screen w-full overflow-hidden">
-        <motion.img
-          src={bannerImage}
-          alt="Serene lake surrounded by nature"
-          style={{ y }}
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1 }}
-          className="absolute inset-0 h-[115%] w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-
-        <div className="relative z-10 flex min-h-screen items-end px-6 pb-20 pt-32 md:px-12 lg:px-16 lg:pb-24">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-4xl text-white"
-          >
-            <span className="mb-5 block text-[11px] font-normal uppercase tracking-wider text-white/65">
-              About Wild Haven
-            </span>
-            <h1 className="max-w-4xl text-5xl font-light leading-[1.02] tracking-tight md:text-7xl">
-              We build places where quiet can do its work.
-            </h1>
-            <p className="mt-7 max-w-2xl text-sm font-light leading-7 text-white/78 md:text-base">
-              Off-grid retreats for slower mornings, clear nights, and the kind of rest that follows
-              you home.
-            </p>
-            <Link
-              to="/locations"
-              className="mt-9 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-xs font-normal uppercase tracking-wider text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
-              Explore locations
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <PageHero
+        image={bannerImage}
+        eyebrow="About Wild Haven"
+        title="We build places where quiet can do its work."
+        description="Off-grid retreats for slower mornings, clear nights, and the kind of rest that follows you home."
+        cta={{ label: "Explore locations", href: "/locations" }}
+        stats={stats}
+      />
 
       <main>
-        <section className="px-6 py-16 md:px-12 lg:px-16">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto grid max-w-5xl overflow-hidden rounded-lg border border-border bg-card shadow-hover md:grid-cols-3"
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="border-b border-border px-6 py-7 text-center last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
-                <div className="text-3xl font-light tracking-tight text-foreground md:text-4xl">{stat.value}</div>
-                <div className="mt-2 text-[10px] font-normal uppercase tracking-wider text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </section>
-
         <section className="px-6 py-20 md:px-12 lg:px-16 lg:py-28">
           <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <motion.div
