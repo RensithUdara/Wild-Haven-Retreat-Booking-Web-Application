@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
-  CalendarDays,
   FileText,
   Mail,
   MapPin,
@@ -76,69 +76,43 @@ const Contact = () => {
       <Navigation />
 
       <main>
-        <section className="relative overflow-hidden bg-foreground pb-24 pt-32 text-background md:pb-32 md:pt-40">
-          <img src={bannerImage} alt="Wild Haven meadow retreat" className="absolute inset-0 h-full w-full object-cover opacity-35" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/15" />
+        <PageHero
+          image={bannerImage}
+          eyebrow="Contact"
+          title="Tell us what kind of quiet you are looking for."
+          description="Ask about availability, accessibility, weather windows, group stays, or the small details that make arriving off-grid feel easy."
+          cta={{ label: "Send a note", href: "#contact-form" }}
+          stats={[
+            { value: "24h", label: "Typical reply" },
+            { value: "6", label: "Retreats" },
+            { value: "9-5", label: "Weekdays" },
+          ]}
+        />
 
-          <div className="container relative z-10 mx-auto px-6 lg:px-12">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end"
-            >
-              <div>
-                <span className="mb-4 block text-[11px] font-normal uppercase tracking-wider text-background/55">
-                  Contact
-                </span>
-                <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                  Tell us what kind of quiet you are looking for.
-                </h1>
-                <p className="mt-6 max-w-xl text-sm font-light leading-7 text-background/70">
-                  Ask about availability, accessibility, weather windows, group stays, or the small
-                  details that make arriving off-grid feel easy.
-                </p>
-              </div>
-
-              <Card className="border border-background/15 bg-background/10 p-6 text-background shadow-hover backdrop-blur md:p-7">
-                <div className="flex items-center gap-3 border-b border-background/15 pb-5">
-                  <CalendarDays className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="text-[11px] font-normal uppercase tracking-wider text-background/45">Typical reply</p>
-                    <p className="mt-1 text-sm font-light">Within one business day</p>
-                  </div>
-                </div>
-                <div className="mt-5 grid gap-4">
-                  {contactMethods.map((method) => {
-                    const Icon = method.icon;
-                    const content = (
-                      <div className="flex items-center gap-3 rounded-md bg-background/10 p-4 smooth-hover hover:bg-background/15">
-                        <Icon className="h-4 w-4 text-primary" />
-                        <div>
-                          <p className="text-[10px] font-normal uppercase tracking-wider text-background/45">
-                            {method.label}
-                          </p>
-                          <p className="mt-1 text-sm font-light">{method.value}</p>
-                        </div>
-                      </div>
-                    );
-
-                    return method.href ? (
-                      <a key={method.label} href={method.href}>
-                        {content}
-                      </a>
-                    ) : (
-                      <div key={method.label}>{content}</div>
-                    );
-                  })}
-                </div>
-              </Card>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="py-24">
+        <section id="contact-form" className="py-24">
           <div className="container mx-auto px-6 lg:px-12">
+            <div className="mb-8 grid gap-4 md:grid-cols-3">
+              {contactMethods.map((method) => {
+                const Icon = method.icon;
+                const content = (
+                  <Card className="h-full rounded-lg border border-border bg-card p-6 shadow-soft smooth-hover hover:-translate-y-1 hover:shadow-hover">
+                    <Icon className="mb-6 h-5 w-5 text-primary" />
+                    <p className="text-[10px] font-normal uppercase tracking-wider text-muted-foreground">
+                      {method.label}
+                    </p>
+                    <p className="mt-2 text-sm font-light text-foreground">{method.value}</p>
+                  </Card>
+                );
+
+                return method.href ? (
+                  <a key={method.label} href={method.href}>
+                    {content}
+                  </a>
+                ) : (
+                  <div key={method.label}>{content}</div>
+                );
+              })}
+            </div>
             <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
