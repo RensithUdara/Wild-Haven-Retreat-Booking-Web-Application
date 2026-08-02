@@ -252,10 +252,32 @@ const Booking = () => {
     const nightlyRate = locations.find((l) => l.id === location)?.price ?? 0;
 
     setSubmitting(true);
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    const activeSession = sessionData.session;
+
+    if (sessionError || !activeSession?.user) {
+      setSubmitting(false);
+      sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          from: dateRange.from.toISOString(),
+          to: dateRange.to.toISOString(),
+          location,
+          guests,
+          name,
+          phone,
+          postcode,
+        })
+      );
+      toast.info("Sign in to confirm your booking - we've saved your details.");
+      navigate("/auth?next=/%23booking");
+      return;
+    }
+
     const { data: inserted, error } = await supabase
       .from("bookings")
       .insert({
-        user_id: user.id,
+        user_id: activeSession.user.id,
         location_id: location,
         check_in: format(dateRange.from, "yyyy-MM-dd"),
         check_out: format(dateRange.to, "yyyy-MM-dd"),
