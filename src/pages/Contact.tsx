@@ -137,7 +137,7 @@ const Contact = () => {
           </div>
         </section>
 
-        <section className="-mt-14 pb-24">
+        <section className="py-24">
           <div className="container mx-auto px-6 lg:px-12">
             <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               <motion.div
