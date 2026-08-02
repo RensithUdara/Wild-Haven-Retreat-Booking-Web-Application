@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MapPin, Star, Calendar, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import { useState } from "react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -26,9 +27,6 @@ const LocationDetail = () => {
   const [guests, setGuests] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
-
   if (!location) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -71,21 +69,20 @@ const LocationDetail = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navigation />
       
-      {/* Hero Image with Parallax */}
-      <div className="relative w-full h-[50vh] overflow-hidden">
-        <motion.img
-          src={allImages[0]}
-          alt={location.name}
-          style={{ y }}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2 }}
-          className="absolute inset-0 w-full h-[120%] object-cover"
-        />
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
+      <PageHero
+        image={allImages[0]}
+        eyebrow={location.location}
+        title={location.name}
+        description={location.description}
+        cta={{ label: "View details", href: "#location-details" }}
+        stats={[
+          { value: `$${location.price}`, label: "Per night" },
+          { value: String(location.rating), label: "Guest rating" },
+          { value: String(location.amenities.find((amenity) => amenity.label.includes("Guests"))?.label ?? "Private"), label: "Stay size" },
+        ]}
+      />
       
-      <main>
+      <main id="location-details">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-16 max-w-full overflow-hidden">
           <Button
             variant="ghost"
