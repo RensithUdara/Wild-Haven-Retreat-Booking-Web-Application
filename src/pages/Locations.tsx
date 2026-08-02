@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,8 +20,6 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 const Locations = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 120]);
   const [sortBy, setSortBy] = useState<SortOption>("price-low");
 
   const sortedLocations = useMemo(() => {
@@ -46,66 +45,21 @@ const Locations = () => {
     <div className="min-h-screen overflow-x-hidden bg-background">
       <Navigation />
 
-      <section className="relative min-h-[82vh] overflow-hidden bg-foreground text-background">
-        <motion.img
-          src={bannerImage}
-          alt="Forest retreat interior"
-          style={{ y }}
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1 }}
-          className="absolute inset-0 h-[115%] w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-
-        <div className="relative z-10 flex min-h-[82vh] items-end px-6 pb-20 pt-32 md:px-12 lg:px-16">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75 }}
-            className="max-w-4xl"
-          >
-            <span className="mb-5 block text-[11px] font-normal uppercase tracking-wider text-background/60">
-              Our locations
-            </span>
-            <h1 className="max-w-4xl text-5xl font-light leading-[1.02] tracking-tight md:text-7xl">
-              Six places to disappear into the good kind of quiet.
-            </h1>
-            <p className="mt-7 max-w-2xl text-sm font-light leading-7 text-background/72 md:text-base">
-              Compare forest, lake, meadow, canyon, river, and summit stays. Each one is off-grid,
-              private, and prepared for slow mornings.
-            </p>
-            <a
-              href="#all-spots"
-              className="mt-9 inline-flex items-center gap-3 rounded-full bg-background px-6 py-3 text-xs font-normal uppercase tracking-wider text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
-              Explore stays
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <PageHero
+        image={bannerImage}
+        eyebrow="Our locations"
+        title="Six places to disappear into the good kind of quiet."
+        description="Compare forest, lake, meadow, canyon, river, and summit stays. Each one is off-grid, private, and prepared for slow mornings."
+        cta={{ label: "Explore stays", href: "#all-spots" }}
+        stats={[
+          { value: String(locations.length), label: "Remote stays" },
+          { value: `$${averagePrice}`, label: "Average night" },
+          { value: topRating.toFixed(1), label: "Top rating" },
+        ]}
+      />
 
       <main id="all-spots">
-        <section className="px-6 py-16 md:px-12 lg:px-16">
-          <div className="mx-auto grid max-w-5xl overflow-hidden rounded-lg border border-border bg-card shadow-hover md:grid-cols-3">
-            <div className="border-b border-border px-6 py-7 text-center md:border-b-0 md:border-r">
-              <p className="text-3xl font-light tracking-tight text-foreground">{locations.length}</p>
-              <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-muted-foreground">Remote stays</p>
-            </div>
-            <div className="border-b border-border px-6 py-7 text-center md:border-b-0 md:border-r">
-              <p className="text-3xl font-light tracking-tight text-foreground">${averagePrice}</p>
-              <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-muted-foreground">Average night</p>
-            </div>
-            <div className="px-6 py-7 text-center">
-              <p className="text-3xl font-light tracking-tight text-foreground">{topRating.toFixed(1)}</p>
-              <p className="mt-2 text-[10px] font-normal uppercase tracking-wider text-muted-foreground">Top rating</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="px-6 pb-24 md:px-12 lg:px-16">
+        <section className="px-6 py-24 md:px-12 lg:px-16">
           <motion.div
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
